@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.box {
+  @apply drop-shadow-lg	 p-2 rounded-lg h-full w-full bg-white border-[1px] border-lightblue;
+}
+
+* {
+  color: black;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+body {
+  font-family: "Poppins";
+
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
