@@ -1,3 +1,8 @@
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("node:path");
+const url = require("url");
+
+// Storage API
 const {
   writeAccessTokenEU,
   writeAccessTokenNA,
@@ -6,24 +11,34 @@ const {
   readClientID,
   readClientSecret,
   readRefreshTokenEU,
-  readRefreshTokenNA
-} = require("./storage/storageAPI");
-const { getLWAAccessToken } = require("./amazon-api/endpoints/get-lwa-access-token");
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("node:path");
-const url = require("url");
+  readRefreshTokenNA,
+} = require("./storageAPI");
 
+// Amazon API
+const {
+  getLWAAccessToken,
+} = require("./get-lwa-access-token");
+
+/**
+ * CONFIG
+ */
+const HTML_DEVELOPMENT_PATH = "http://localhost:3000/";
+const HTML_PRODUCTION_PATH = path.join(__dirname, "../app/build/index.html");
+const PRELOAD_PATH = path.join(__dirname, "preload.js");
+const HEIGHT = 640;
+const WIDTH = 1200;
+const TITLE = "Dietz Amazon SP-API";
 
 /**
  * LIB
  * */
 const createMainWindow = () => {
   const window = new BrowserWindow({
-    title: "Dietz Amazon SP-API",
-    width: 1200,
-    height: 640,
+    title: TITLE,
+    width: WIDTH,
+    height: HEIGHT,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: PRELOAD_PATH,
       sandbox: false,
     },
   });
@@ -31,12 +46,11 @@ const createMainWindow = () => {
   const startUrl =
     process.env.NODE_ENV === "production"
       ? url.format({
-          pathname: path.join(__dirname, "../app/build/index.html"),
+          pathname: HTML_PRODUCTION_PATH,
           protocol: "file:",
           slashes: true,
         })
-      : "http://localhost:3000/";
-      
+      : HTML_DEVELOPMENT_PATH;
 
   window.loadURL(startUrl);
 };
@@ -60,7 +74,8 @@ app.on("window-all-closed", function () {
 /**
  * IPC
  * */
-ipcMain.handle("manage_token", async (event, data) => {
+ipcMain.handle("manage_token", async (_, data) => {
+  
   // get payload
   const { action, region } = data;
 
@@ -68,17 +83,22 @@ ipcMain.handle("manage_token", async (event, data) => {
   let currentAccessToken;
   let currentRefreshToken;
 
-  switch(region) {
-    case "eu" : currentRefreshToken = readRefreshTokenEU();
-    case "na" : currentRefreshToken = readRefreshTokenNA();
+  switch (region) {
+    case "eu":
+      currentRefreshToken = readRefreshTokenEU();
+    case "na":
+      currentRefreshToken = readRefreshTokenNA();
   }
 
   // Switch statement to determine action based on input data
   switch (action) {
     case "refresh":
-      
       // Fetching new token
-      currentAccessToken = await getLWAAccessToken(readClientID(), readClientSecret(), currentRefreshToken);
+      currentAccessToken = await getLWAAccessToken(
+        readClientID(),
+        readClientSecret(),
+        currentRefreshToken
+      );
 
       // Writing to storage
       switch (region) {
@@ -107,7 +127,11 @@ ipcMain.handle("manage_token", async (event, data) => {
       // If token doesn't exist, fetch a new one
       if (currentAccessToken == "" || !currentAccessToken) {
         // Making call to Amazon for new token
-        currentAccessToken = await getLWAAccessToken(readClientID(), readClientSecret(), currentRefreshToken);
+        currentAccessToken = await getLWAAccessToken(
+          readClientID(),
+          readClientSecret(),
+          currentRefreshToken
+        );
 
         // Writing new token to storage based on region
         switch (region) {
@@ -119,7 +143,7 @@ ipcMain.handle("manage_token", async (event, data) => {
             break;
         }
       }
-      
+
       return currentAccessToken;
   }
 });

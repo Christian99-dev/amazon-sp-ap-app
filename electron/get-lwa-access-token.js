@@ -1,4 +1,4 @@
-const getLWAAccessToken = async (client_id, client_secret, refresh_token) => {
+module.exports = async (client_id, client_secret, refresh_token) => {
   const response = await fetch("https://api.amazon.com/auth/o2/token", {
     method: "POST",
     headers: {
@@ -20,8 +20,4 @@ const getLWAAccessToken = async (client_id, client_secret, refresh_token) => {
 
   const data = await response.json();
   return data.access_token;
-};
-
-module.exports = {
-  getLWAAccessToken,
 };

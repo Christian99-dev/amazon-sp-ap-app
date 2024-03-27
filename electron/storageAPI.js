@@ -1,21 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-
-/** 
- * STORAGE SCHEMA 
- * */
-// export type storageSchema = {
-//   access_token_eu: "string";
-//   access_token_na: "string";
-//   client_id: "string";
-//   client_secret: "string";
-//   refresh_token_eu: "string";
-//   refresh_token_na: "string";
-// };
-
-/** 
- * CONFIG 
+/**
+ * CONFIG
  * */
 const PATH = path.join(__dirname, "storage.json");
 
@@ -29,9 +16,8 @@ const readStorageValue = (key) => {
 };
 
 const writeStorageValue = (key, value) => {
-  let storage = {};
   const data = fs.readFileSync(PATH, "utf8");
-  storage = JSON.parse(data);
+  let storage = JSON.parse(data);
   storage[key] = value;
   fs.writeFileSync(PATH, JSON.stringify(storage, null, 2));
 };
@@ -40,7 +26,6 @@ const writeStorageValue = (key, value) => {
  * API
  * */
 module.exports = {
-  
   /** Read */
   readAccessTokenEU: () => readStorageValue("access_token_eu"),
   readAccessTokenNA: () => readStorageValue("access_token_na"),
