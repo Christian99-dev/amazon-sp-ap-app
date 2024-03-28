@@ -27,7 +27,7 @@ export const CountryCheckbox = ({
   };
 
   return (
-    <div className="flex items-center mb-1">
+    <div className="flex items-center">
       <Checkbox
         id={country.countryCode}
         htmlFor={country.countryCode}
