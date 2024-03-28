@@ -7,7 +7,7 @@ const AsinsBox = ({className} : {className?: string}) => {
   const { startSearching } = usePricingContext();
 
   return (
-    <div className="flex flex-row gap-2 align-center box">
+    <div className={`${className} flex flex-row gap-2 align-center box`}>
       {asins.map((asin, index) => (
         <Input placeholder={`ASIN ${index}`} key={index} value={asin} onChange={(event: any) => handleChange(index, event.target.value)} />
       ))}

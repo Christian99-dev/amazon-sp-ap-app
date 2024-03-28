@@ -1,4 +1,5 @@
 import { CountryData } from "../../../lib/countrys";
+import Checkbox from "../../shared/Checkbox";
 
 export const CountryCheckbox = ({
   country,
@@ -8,9 +9,13 @@ export const CountryCheckbox = ({
 }: {
   country: CountryData;
   selectedCountries: CountryData[];
-  removeCountry: (country: CountryData) => void,
-  addCountry: (country: CountryData) => void
+  removeCountry: (country: CountryData) => void;
+  addCountry: (country: CountryData) => void;
 }) => {
+  
+  /**
+   * Helper
+   */
   const isSelected = () => selectedCountries.some((c) => c === country);
 
   const handleCheckboxChange = () => {
@@ -23,19 +28,13 @@ export const CountryCheckbox = ({
 
   return (
     <div className="flex items-center mb-1">
-      <input
+      <Checkbox
         id={country.countryCode}
-        type="checkbox"
+        htmlFor={country.countryCode}
         checked={isSelected()}
         onChange={handleCheckboxChange}
-        className="w-3 h-3 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        text={country.countryName}
       />
-      <label
-        htmlFor={country.countryCode}
-        className="text-xs font-medium text-gray-900 ms-2 dark:text-gray-300"
-      >
-        {country.countryName}
-      </label>
     </div>
   );
 };

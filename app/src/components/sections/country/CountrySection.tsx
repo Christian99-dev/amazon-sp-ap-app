@@ -4,8 +4,7 @@ import { CountryCheckbox } from "./CountryCheckbox";
 
 const LaenderBox = ({className} : {className?: string}) => {
   const { selectedCountries, addCountry, removeCountry } = useCountryContext();
-
-  console.log(selectedCountries)
+  
   return (
     <div className={`${className} box`}>
       {getAllRegions(true).map((region: Region) => (
