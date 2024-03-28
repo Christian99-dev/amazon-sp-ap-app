@@ -38,8 +38,7 @@ const createMainWindow = () => {
     },
   });
 
-  console.log(process.env.NODE_ENV);
-  const startUrl = HTML_PRODUCTION_PATH
+  const startUrl = HTML_DEVELOPMENT_PATH
 
   window.loadURL(startUrl);
 };

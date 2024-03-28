@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
-import { CountryData, getAllActiveCountries } from "../amazon-api/lib/countrys";
+import { createContext, useContext, useState } from "react";
+import { CountryData, getAllActiveCountries } from "../lib/countrys";
 
 // Definieren Sie den Kontext
 interface ContriesContextType {

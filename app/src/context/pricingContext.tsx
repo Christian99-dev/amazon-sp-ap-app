@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
-import { CountryData } from "../amazon-api/lib/countrys";
+import { CountryData } from "../lib/countrys";
 import { useAsinsContext } from "./asinsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
-import { getPricingAsin } from "../amazon-api/endpoints/get-pricing-asin";
+import { getPricingAsin } from "../amazon-api/get-pricing-asin";
 
 interface PricingContextType {
   startSearching: () => void;

@@ -1,4 +1,4 @@
-import { CountryData } from "../../../amazon-api/lib/countrys";
+import { CountryData } from "../../../lib/countrys";
 
 export const CountryCheckbox = ({
   country,

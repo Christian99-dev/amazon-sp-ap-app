@@ -16,19 +16,12 @@ const marketplaceDataConfig: CountryData[] = [
   { countryName: "USA",             countryCode: "US", marketplaceId: "ATVPDKIKX0DER",  region: "na", active: true },
   { countryName: "Mexico",          countryCode: "MX", marketplaceId: "A1AM78C64UM0Y8", region: "na", active: true },
   { countryName: "Brazil",          countryCode: "BR", marketplaceId: "A2Q3Y263D00KWC", region: "na", active: true },
-
-  // FE
-  { countryName: "Singapore",       countryCode: "IT", marketplaceId: "A19VAU5U5O7RUS", region: "fe", active: false },
-  { countryName: "Australia",       countryCode: "SE", marketplaceId: "A39IBJ37TRP1C6", region: "fe", active: false },
-  { countryName: "Japan",           countryCode: "PL", marketplaceId: "A1VC38T7YXB528", region: "fe", active: false },
 ];
 
-export const getRegionName = (regionCode: "na" | "eu" | "fe"): string => {
+export const getRegionName = (regionCode: "na" | "eu"): string => {
   switch (regionCode) {
     case "eu":
       return "Europa";
-    case "fe":
-      return "Far East";
     case "na":
       return "North America";
   }
@@ -43,7 +36,7 @@ export type CountryData = {
   active: boolean;
 };
 
-export type Region = "na" | "eu" | "fe";
+export type Region = "na" | "eu";
 
 export type Country =
   | "Canada"
@@ -58,21 +51,18 @@ export type Country =
   | "Germany"
   | "Italy"
   | "Sweden"
-  | "Poland"
-  | "Singapore"
-  | "Australia"
-  | "Japan";
+  | "Poland";
 
-  export const getAllActiveCountries = (): CountryData[] => {
-    return marketplaceDataConfig.filter((data) => data.active);
-  };
+export const getAllActiveCountries = (): CountryData[] => {
+  return marketplaceDataConfig.filter((data) => data.active);
+};
 
 export const getAllRegions = (onlyActives: boolean): Region[] => {
   const activeCountries = marketplaceDataConfig.filter(
     (data) => !onlyActives || data.active
   );
   const uniqueRegions: Region[] = Array.from(
-    new Set(activeCountries.map(({region}) => region))
+    new Set(activeCountries.map(({ region }) => region))
   );
   return uniqueRegions;
 };

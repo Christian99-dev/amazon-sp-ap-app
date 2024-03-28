@@ -1,10 +1,11 @@
-import React from "react";
-import {  Region, getAllRegions, getCountriesByRegion, getRegionName } from "../../../amazon-api/lib/countrys";
+import {  Region, getAllRegions, getCountriesByRegion, getRegionName } from "../../../lib/countrys";
 import { useCountryContext } from "../../../context/countryContext";
-import { CountryCheckbox } from "./CountrieCheckbox";
+import { CountryCheckbox } from "./CountryCheckbox";
 
 const LaenderBox = ({className} : {className?: string}) => {
   const { selectedCountries, addCountry, removeCountry } = useCountryContext();
+
+  console.log(selectedCountries)
   return (
     <div className={`${className} box`}>
       {getAllRegions(true).map((region: Region) => (
