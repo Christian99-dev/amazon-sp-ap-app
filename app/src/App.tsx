@@ -1,7 +1,7 @@
 import TokenBox from "./components/sections/token/TokenSection";
-import Preise from "./components/domain/Preise/Preise";
+import Preise from "./components/sections/pricing/PricingSection";
 import LaenderBox from "./components/sections/country/CountrySection";
-import AsinsBox from "./components/domain/Asins/AsinsBox";
+import AsinsBox from "./components/sections/asins/AsinsSection";
 import { useEffect } from "react";
 import { useTokenContext } from "./context/tokenContext";
 

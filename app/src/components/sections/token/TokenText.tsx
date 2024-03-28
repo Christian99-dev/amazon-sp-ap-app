@@ -21,7 +21,6 @@ const TokenText = ({
         onClick={onClickNew}
         disabled={isLoading}
         text="New"
-        spinner={false}
         size="sm"
       />
       <span className="mr-2 text-sm font-medium text-black">{region}:</span>

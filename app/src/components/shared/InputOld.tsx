@@ -1,5 +1,4 @@
-import React from "react";
-import { isAsin } from "../../../lib/regex";
+import { isAsin } from "../../lib/regex";
 
 const Input = ({
   placeholder,

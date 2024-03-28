@@ -1,8 +1,13 @@
 import { createContext, useContext, useState } from "react";
+import { isAsin } from "../lib/regex";
 
 interface AsinsContext {
   asins: string[];
   handleChange: (index: number, value: string) => void;
+  addAsin: () => void;
+  delAsin: (index: number) => void;
+  canAdd: boolean;
+  getValidAsins: () => string[];
 }
 
 // Erstellen Sie den Kontext
@@ -21,7 +26,7 @@ export const useAsinsContext = () => {
 
 // Provider-Komponente, um den Kontext bereitzustellen
 export const AsinsProvider = ({ children }: any) => {
-  const [asins, setAsins] = useState<string[]>(["", "", "", ""]);
+  const [asins, setAsins] = useState<string[]>([""]);
 
   const handleChange = (index: number, value: string) => {
     const newAsins = [...asins];
@@ -29,8 +34,28 @@ export const AsinsProvider = ({ children }: any) => {
     setAsins(newAsins);
   };
 
+  const addAsin = () => {
+    setAsins([...asins, ""]);
+  };
+
+  const delAsin = (index: number) => {
+    if (asins.length > 1) {
+      const newAsins = [...asins];
+      newAsins.splice(index, 1);
+      setAsins(newAsins);
+    }
+  };
+
+  const getValidAsins = (): string[] => {
+    return asins.filter((asin) => asin != "").filter((asin) => isAsin(asin));
+  };
+
+  const canAdd = asins.length >= 20;
+
   return (
-    <AsinsContext.Provider value={{ asins, handleChange }}>
+    <AsinsContext.Provider
+      value={{ asins, handleChange, addAsin, delAsin, canAdd, getValidAsins }}
+    >
       {children}
     </AsinsContext.Provider>
   );
