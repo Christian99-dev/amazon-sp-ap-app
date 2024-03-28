@@ -4,20 +4,15 @@ const url = require("url");
 
 // Storage API
 const {
-  writeAccessTokenEU,
-  writeAccessTokenNA,
-  readAccessTokenEU,
-  readAccessTokenNA,
+  writeAccessToken,
+  readRefreshToken,
+  readAccessToken,
   readClientID,
   readClientSecret,
-  readRefreshTokenEU,
-  readRefreshTokenNA,
 } = require("./storageAPI");
 
 // Amazon API
-const {
-  getLWAAccessToken,
-} = require("./get-lwa-access-token");
+const getLWAAccessToken = require("./get-lwa-access-token");
 
 /**
  * CONFIG
@@ -25,7 +20,7 @@ const {
 const HTML_DEVELOPMENT_PATH = "http://localhost:3000/";
 const HTML_PRODUCTION_PATH = path.join(__dirname, "../app/build/index.html");
 const PRELOAD_PATH = path.join(__dirname, "preload.js");
-const HEIGHT = 640;
+const HEIGHT = 700;
 const WIDTH = 1200;
 const TITLE = "Dietz Amazon SP-API";
 
@@ -75,75 +70,86 @@ app.on("window-all-closed", function () {
  * IPC
  * */
 ipcMain.handle("manage_token", async (_, data) => {
-  
+  // response schema
+  const manageTokenResponse = (code, message, access_token) => {
+    return {
+      code: code,
+      message: message,
+      access_token: access_token,
+    };
+  };
+
   // get payload
   const { action, region } = data;
 
   // Placeholder for token
   let currentAccessToken;
-  let currentRefreshToken;
 
-  switch (region) {
-    case "eu":
-      currentRefreshToken = readRefreshTokenEU();
-    case "na":
-      currentRefreshToken = readRefreshTokenNA();
-  }
+  // pulling data from storage
+  const refreshToken = readRefreshToken(region);
+  const client_id = readClientID();
+  const client_secret = readClientSecret();
+
+  // Wenn daten nicht vollständig,
+  if (refreshToken == "" || client_id == "" || client_secret == "")
+    return manageTokenResponse(41, "Benutzerdaten Unvollständig", null);
 
   // Switch statement to determine action based on input data
   switch (action) {
     case "refresh":
       // Fetching new token
-      currentAccessToken = await getLWAAccessToken(
-        readClientID(),
-        readClientSecret(),
-        currentRefreshToken
-      );
+      try {
+        currentAccessToken = await getLWAAccessToken(
+          client_id,
+          client_secret,
+          refreshToken,
+          true
+        );
+      } catch (error) {
+        return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);
+      }
 
       // Writing to storage
-      switch (region) {
-        case "eu":
-          writeAccessTokenEU(currentAccessToken);
-          break;
-        case "na":
-          writeAccessTokenNA(currentAccessToken);
-          break;
-      }
+      writeAccessToken(region, currentAccessToken);
 
-      // Returning to app
-      return currentAccessToken;
+      return manageTokenResponse(
+        21,
+        `${region} Token Erfolgreich Refresht`,
+        currentAccessToken
+      );
 
     case "get":
-      // Reading token
-      switch (region) {
-        case "eu":
-          currentAccessToken = readAccessTokenEU();
-          break;
-        case "na":
-          currentAccessToken = readAccessTokenNA();
-          break;
-      }
+      // Reading access token from storage
+      currentAccessToken = readAccessToken(region);
 
       // If token doesn't exist, fetch a new one
-      if (currentAccessToken == "" || !currentAccessToken) {
+      if (currentAccessToken == "") {
         // Making call to Amazon for new token
-        currentAccessToken = await getLWAAccessToken(
-          readClientID(),
-          readClientSecret(),
-          currentRefreshToken
-        );
-
-        // Writing new token to storage based on region
-        switch (region) {
-          case "eu":
-            writeAccessTokenEU(currentAccessToken);
-            break;
-          case "na":
-            writeAccessTokenNA(currentAccessToken);
-            break;
+        try {
+          currentAccessToken = await getLWAAccessToken(
+            client_id,
+            client_secret,
+            refreshToken,
+            true
+          );
+        } catch (error) {
+          return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);
         }
+
+        // Writing to storage
+        writeAccessToken(region, currentAccessToken);
+
+        return manageTokenResponse(
+          21,
+          `${region} Token Erfolgreich Refresht`,
+          currentAccessToken
+        );
       }
 
-      return currentAccessToken;
+      return manageTokenResponse(
+        22,
+        `${region} Token Vorhanden`,
+        currentAccessToken
+      );
   }
 });

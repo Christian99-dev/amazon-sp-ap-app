@@ -1,28 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { TokenProvider } from "./context/tokenContext"; // Annahme: Ihr Token-Provider
+
+import App from "./App";
+import "./index.css";
+
+// Provider
+import { TokenProvider } from "./context/tokenContext";
 import { CountriesProvider } from "./context/countryContext";
 import { AsinsProvider } from "./context/asinsContext";
 import { PricingProvider } from "./context/pricingContext";
+import { ToastProvider } from "./context/toastContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
-  <React.StrictMode>
-    <CountriesProvider>
-      <TokenProvider>
-        <AsinsProvider>
-          <PricingProvider>
-            <App />
-          </PricingProvider>
-        </AsinsProvider>
-      </TokenProvider>
-    </CountriesProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+    <ToastProvider>
+      <CountriesProvider>
+        <TokenProvider>
+          <AsinsProvider>
+            <PricingProvider>
+              <App />
+            </PricingProvider>
+          </AsinsProvider>
+        </TokenProvider>
+      </CountriesProvider>
+    </ToastProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

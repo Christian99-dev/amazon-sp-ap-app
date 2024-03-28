@@ -3,12 +3,10 @@ import {  Region, getAllRegions, getCountriesByRegion, getRegionName } from "../
 import { useCountryContext } from "../../../context/countryContext";
 import { CountryCheckbox } from "./CountrieCheckbox";
 
-const LaenderBox = () => {
+const LaenderBox = ({className} : {className?: string}) => {
   const { selectedCountries, addCountry, removeCountry } = useCountryContext();
-
-    console.log(selectedCountries);
   return (
-    <div className="box">
+    <div className={`${className} box`}>
       {getAllRegions(true).map((region: Region) => (
         <div className="mb-3" key={region}>
           <h2 className="mb-1">{getRegionName(region)}</h2>

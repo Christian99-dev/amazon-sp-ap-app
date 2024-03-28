@@ -1,26 +1,23 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Region } from "../amazon-api/lib/countrys";
+import { createContext, useContext, useState } from "react";
+import { useToastContext } from "./toastContext";
 
-interface TokenState {
+type TokenState = {
   accessTokenEU: string;
   accessTokenNA: string;
   loadingEuToken: boolean;
   loadingNaToken: boolean;
-}
-
-interface TokenContextType {
-  tokenState: TokenState;
-  manageToken: (region: "eu" | "na", action: "refresh" | "get") => void;
-}
-
-const initialTokenState: TokenState = {
-  accessTokenEU: "",
-  accessTokenNA: "",
-  loadingEuToken: true,
-  loadingNaToken: true,
 };
 
-const TokenContext = createContext<TokenContextType | undefined>(undefined);
+const TokenContext = createContext<
+  | {
+      tokenState: TokenState;
+      manageTokenState: (
+        region: "eu" | "na",
+        action: "refresh" | "get"
+      ) => void;
+    }
+  | undefined
+>(undefined);
 
 export const useTokenContext = () => {
   const context = useContext(TokenContext);
@@ -31,47 +28,94 @@ export const useTokenContext = () => {
 };
 
 export const TokenProvider = ({ children }: any) => {
-  const [tokenState, setTokenState] = useState<TokenState>(initialTokenState);
+  const { showToast } = useToastContext();
 
-  const manageToken = async (region: "eu" | "na", action: "get" | "refresh") => {
-    
-    setTokenState((prevState) => ({
-      ...prevState,
-      loadingEuToken: region === "eu" ? true : prevState.loadingEuToken,
-      loadingNaToken: region === "na" ? true : prevState.loadingNaToken,
-    }));
+  /**
+   * State
+   * */
+  const [tokenState, setTokenState] = useState<TokenState>({
+    accessTokenEU: "",
+    accessTokenNA: "",
+    loadingEuToken: true,
+    loadingNaToken: true,
+  });
 
-    try {
-      // Simuliere einen API-Aufruf
-      const newToken = await window.api.manageToken(region, action)
+  /**
+   * Actions
+   * */
+  const manageTokenState = async (
+    region: "eu" | "na",
+    action: "get" | "refresh"
+  ) => {
 
-      // Aktualisiere den Token-Zustand
-      setTokenState((prevState) => ({
-        ...prevState,
-        loadingEuToken: region === "eu" ? false : prevState.loadingEuToken,
-        loadingNaToken: region === "na" ? false : prevState.loadingNaToken,
-        accessTokenEU: region === "eu" ? newToken : prevState.accessTokenEU,
-        accessTokenNA: region === "na" ? newToken : prevState.accessTokenNA,
-      }));
-
-      console.log({ region: test, tokenAction: test, token: newToken });
-    } catch (error) {
-      console.error("Error managing token:", error);
+    // Browser
+    if(!window.api) {
+      showToast("Kein IPC gefunden", "error");
+      return;
     }
+    
+    let ipcResponse;
+
+    // Loading = true
+    updateLoadingState(region, true);
+
+    // Token wird aus der StorageApi geholt (entweder neu generiert oder refresht)
+    try {
+      ipcResponse = await window.api.manageToken(region, action);
+    } catch(error) {
+      showToast("Unbekannter Fehler", "error");
+      updateLoadingState(region, false);
+      return;
+    }
+
+    // Auswerten des ereignis
+    switch (ipcResponse.code) {
+      case 41:
+      case 42: {
+        showToast(ipcResponse.message, "error");
+        break;
+      }
+      case 21: {
+        updateTokenState(region, ipcResponse.access_token);
+        showToast(ipcResponse.message, "success");
+        break;
+      }
+      case 22: {
+        updateTokenState(region, ipcResponse.access_token);
+        showToast(ipcResponse.message, "info");
+        break;
+      }
+    }
+
+    updateLoadingState(region, false);
+
+    console.log(ipcResponse);
+    return;
   };
 
-  useEffect(() => {
-    manageToken("eu", "get");
-    manageToken("na", "get")
-  }, [])
+  /**
+   * Helper
+   * */
+
+  const updateLoadingState = (region: "eu" | "na", isLoading: boolean) => {
+    setTokenState((prevState) => ({
+      ...prevState,
+      loadingEuToken: region === "eu" ? isLoading : prevState.loadingEuToken,
+      loadingNaToken: region === "na" ? isLoading : prevState.loadingNaToken,
+    }));
+  };
+
+  const updateTokenState = (region: "eu" | "na", accessToken: string) => {
+    setTokenState((prevState) => ({
+      ...prevState,
+      accessTokenEU: region === "eu" ? accessToken : prevState.accessTokenEU,
+      accessTokenNA: region === "na" ? accessToken : prevState.accessTokenNA,
+    }));
+  };
 
   return (
-    <TokenContext.Provider value={{ tokenState, manageToken }}>
+    <TokenContext.Provider value={{ tokenState, manageTokenState }}>
       {children}
     </TokenContext.Provider>
   );
-};
-
-const sleep = (milliseconds: number) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };

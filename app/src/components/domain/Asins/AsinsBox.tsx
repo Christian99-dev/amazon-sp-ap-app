@@ -2,7 +2,7 @@ import Input from "./Input";
 import { useAsinsContext } from "../../../context/asinsContext";
 import { usePricingContext } from "../../../context/pricingContext";
 
-const AsinsBox = () => {
+const AsinsBox = ({className} : {className?: string}) => {
   const { asins, handleChange } = useAsinsContext();
   const { startSearching } = usePricingContext();
 
