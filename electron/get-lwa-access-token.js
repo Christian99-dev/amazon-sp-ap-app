@@ -1,9 +1,10 @@
 module.exports = async (
   client_id,
   client_secret,
-  refresh_token,
-  testing = false
+  refresh_token
 ) => {
+  // Testflag
+  let testing = true; 
   let response;
 
   if (testing) {

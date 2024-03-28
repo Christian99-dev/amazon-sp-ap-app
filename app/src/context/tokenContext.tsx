@@ -88,8 +88,6 @@ export const TokenProvider = ({ children }: any) => {
     }
 
     updateLoadingState(region, false);
-
-    console.log(ipcResponse);
     return;
   };
 

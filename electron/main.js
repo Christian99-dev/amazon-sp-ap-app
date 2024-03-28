@@ -26,7 +26,6 @@ const TITLE = "Dietz Amazon SP-API";
 
 // require('electron-reload')(__dirname, { ignored: /[\/\\]storage\.json/ });
 
-
 /**
  * LIB
  * */
@@ -105,8 +104,7 @@ ipcMain.handle("manage_token", async (_, data) => {
         currentAccessToken = await getLWAAccessToken(
           client_id,
           client_secret,
-          refreshToken,
-          true
+          refreshToken
         );
       } catch (error) {
         return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);
@@ -132,8 +130,7 @@ ipcMain.handle("manage_token", async (_, data) => {
           currentAccessToken = await getLWAAccessToken(
             client_id,
             client_secret,
-            refreshToken,
-            true
+            refreshToken
           );
         } catch (error) {
           return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);

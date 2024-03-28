@@ -31,7 +31,7 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <ToastContainer />
+      <ToastContainer position="bottom-left"  />
     </ToastContext.Provider>
   );
 };
