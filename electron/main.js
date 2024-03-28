@@ -24,8 +24,6 @@ const HEIGHT = 700;
 const WIDTH = 1200;
 const TITLE = "Dietz Amazon SP-API";
 
-// require('electron-reload')(__dirname, { ignored: /[\/\\]storage\.json/ });
-
 /**
  * LIB
  * */
@@ -40,14 +38,8 @@ const createMainWindow = () => {
     },
   });
 
-  const startUrl =
-    process.env.NODE_ENV === "production"
-      ? url.format({
-          pathname: HTML_PRODUCTION_PATH,
-          protocol: "file:",
-          slashes: true,
-        })
-      : HTML_DEVELOPMENT_PATH;
+  console.log(process.env.NODE_ENV);
+  const startUrl = HTML_PRODUCTION_PATH
 
   window.loadURL(startUrl);
 };
@@ -115,7 +107,7 @@ ipcMain.handle("manage_token", async (_, data) => {
 
       return manageTokenResponse(
         21,
-        `${region} Token Erfolgreich Refresht`,
+        `${region.toUpperCase()} Token Erfolgreich Refresht`,
         currentAccessToken
       );
 
@@ -141,14 +133,14 @@ ipcMain.handle("manage_token", async (_, data) => {
 
         return manageTokenResponse(
           21,
-          `${region} Token Erfolgreich Refresht`,
+          `${region.toUpperCase()} Token Erfolgreich Refresht`,
           currentAccessToken
         );
       }
 
       return manageTokenResponse(
         22,
-        `${region} Token Vorhanden`,
+        `${region.toUpperCase()} Token Vorhanden`,
         currentAccessToken
       );
   }

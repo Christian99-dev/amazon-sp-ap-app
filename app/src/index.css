@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.box {
-  @apply drop-shadow-lg	p-2 rounded-lg bg-white border-[1px] border-lightblue;
-}
-
 * {
   color: black;
   box-sizing: border-box;
@@ -14,10 +10,30 @@
 
 body {
   font-family: "Poppins";
+}
 
+.box {
+  @apply drop-shadow-lg	p-2 rounded-lg bg-white border-[1px] border-lightblue;
 }
 
 h1 {
   font-size: 18px;
   font-weight: 600;
+}
+
+.Toastify__toast {
+  font-family: "Poppins";
+  @apply mb-3;
+}
+
+.Toastify__toast-container {
+  @apply p-2 left-3 bottom-0;
+}
+
+.Toastify__toast-body div {
+  @apply text-xs font-[400] text-white;
+}
+
+.Toastify__toast path {
+  @apply text-slate-100;
 }

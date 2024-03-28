@@ -4,7 +4,7 @@ module.exports = async (
   refresh_token
 ) => {
   // Testflag
-  let testing = true; 
+  let testing = false; 
   let response;
 
   if (testing) {
