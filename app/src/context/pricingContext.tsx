@@ -4,10 +4,11 @@ import { useAsinsContext } from "./asinsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
 import { getPricingAsin } from "../amazon-api/get-pricing-asin";
+import { useToastContext } from "./toastContext";
 
 interface PricingContextType {
   startSearching: () => void;
-  currentList: any;
+  currentResponse: any;
   isLoading: boolean;
 }
 
@@ -26,28 +27,47 @@ export const usePricingContext = () => {
 
 // Provider-Komponente, um den Kontext bereitzustellen
 export const PricingProvider = ({ children }: any) => {
-  const [currentList, setCurrentList] = useState<any>([]);
+  // State
+  const [currentResponse, setCurrentResponse] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const { asins } = useAsinsContext();
-  const { selectedCountries } = useCountryContext();
+
+  // Uses..
+  const { getValidAsins, hasValidAsins } = useAsinsContext();
+  const { selectedCountries, hasCountrysSelected } = useCountryContext();
   const {
     tokenState: { accessTokenEU, accessTokenNA },
   } = useTokenContext();
+  const { showToast } = useToastContext();
 
   const startSearching = () => {
     if (!window.api) return;
 
-    getPricingAsin(
-      selectedCountries[0].marketplaceId,
-      asins[0],
-      accessTokenEU
-    ).then((res: any) => {
-      console.log(res);
-    });
+    if (!hasCountrysSelected) {
+      showToast("Bitte ein Land Auswählen", "error");
+      return;
+    }
+
+    if (!hasValidAsins) {
+      showToast("Bitte valide ASIN angeben", "error");
+      return;
+    }
+
+    if (accessTokenEU === "" || accessTokenNA === "") {
+      showToast("NA/EU Access Token fehlt", "error");
+      return;
+    }
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (
-    <PricingContext.Provider value={{ startSearching, currentList, isLoading }}>
+    <PricingContext.Provider
+      value={{ startSearching, currentResponse, isLoading }}
+    >
       {children}
     </PricingContext.Provider>
   );

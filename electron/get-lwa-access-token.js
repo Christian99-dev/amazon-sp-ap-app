@@ -4,7 +4,7 @@ module.exports = async (
   refresh_token
 ) => {
   // Testflag
-  let testing = true; 
+  let testing = false; 
   let response;
 
   if (testing) {
@@ -12,7 +12,7 @@ module.exports = async (
     response = await new Promise((resolve) => {
       setTimeout(() => {
         resolve({
-          ok: false,
+          ok: true,
           status: 200,
           statusText: "OK",
           json: async () => {

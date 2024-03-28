@@ -8,6 +8,7 @@ interface AsinsContext {
   delAsin: (index: number) => void;
   canAdd: boolean;
   getValidAsins: () => string[];
+  hasValidAsins: boolean;
 }
 
 // Erstellen Sie den Kontext
@@ -52,9 +53,11 @@ export const AsinsProvider = ({ children }: any) => {
 
   const canAdd = asins.length >= 20;
 
+  const hasValidAsins = getValidAsins().length > 0;
+
   return (
     <AsinsContext.Provider
-      value={{ asins, handleChange, addAsin, delAsin, canAdd, getValidAsins }}
+      value={{ asins, handleChange, addAsin, delAsin, canAdd, getValidAsins, hasValidAsins }}
     >
       {children}
     </AsinsContext.Provider>
