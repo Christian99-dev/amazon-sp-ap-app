@@ -12,7 +12,7 @@ module.exports = async (
     response = await new Promise((resolve) => {
       setTimeout(() => {
         resolve({
-          ok: true,
+          ok: false,
           status: 200,
           statusText: "OK",
           json: async () => {

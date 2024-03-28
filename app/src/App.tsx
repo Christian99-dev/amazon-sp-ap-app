@@ -19,7 +19,7 @@ function App() {
         <AsinsBox />
         <Preise className="flex-1" />
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col w-56 gap-3">
         <LaenderBox className="flex-1" />
         <TokenBox />
       </div>

@@ -17,16 +17,11 @@ const TokenText = ({
 }) => {
   return (
     <div className={`${className} flex items-center`}>
-      <Button
-        onClick={onClickNew}
-        disabled={isLoading}
-        text="New"
-        size="sm"
-      />
+      <Button onClick={onClickNew} disabled={isLoading} text="New" size="sm" />
       <span className="mr-2 text-sm font-medium text-black">{region}:</span>
       {!isLoading ? (
         <span className="text-[13px] font-bold text-green-500">
-          {reduceString(token, 20)}
+          {token !== "" ? reduceString(token, 20) : <span className="text-[13px] font-bold text-red-500">(leer)</span>}
         </span>
       ) : (
         <Spinner />
