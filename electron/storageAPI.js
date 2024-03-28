@@ -4,7 +4,7 @@ const path = require("path");
 /**
  * CONFIG
  * */
-const PATH = path.join(__dirname, "storage.json");
+const PATH = path.join(__dirname, "static/storage.json");
 
 /**
  * BASE OPERATIONS

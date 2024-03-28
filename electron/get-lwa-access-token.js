@@ -11,7 +11,7 @@ module.exports = async (
     response = await new Promise((resolve) => {
       setTimeout(() => {
         resolve({
-          ok: false,
+          ok: true,
           status: 200,
           statusText: "OK",
           json: async () => {
@@ -20,7 +20,7 @@ module.exports = async (
             };
           }
         });
-      }, 2000);
+      }, 500);
     });
   } else {
     // Normaler Fetch für den echten Aufruf

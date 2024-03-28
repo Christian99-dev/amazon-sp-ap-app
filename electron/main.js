@@ -24,6 +24,9 @@ const HEIGHT = 700;
 const WIDTH = 1200;
 const TITLE = "Dietz Amazon SP-API";
 
+// require('electron-reload')(__dirname, { ignored: /[\/\\]storage\.json/ });
+
+
 /**
  * LIB
  * */
