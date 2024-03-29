@@ -48,7 +48,10 @@ export const AsinsProvider = ({ children }: any) => {
   };
 
   const getValidAsins = (): string[] => {
-    return asins.filter((asin) => asin != "").filter((asin) => isAsin(asin));
+    return asins
+      .filter((asin) => asin != "")
+      .filter((asin) => isAsin(asin))
+      .filter((asin, index, self) => self.indexOf(asin) === index);
   };
 
   const canAdd = asins.length >= 20;
@@ -57,7 +60,15 @@ export const AsinsProvider = ({ children }: any) => {
 
   return (
     <AsinsContext.Provider
-      value={{ asins, handleChange, addAsin, delAsin, canAdd, getValidAsins, hasValidAsins }}
+      value={{
+        asins,
+        handleChange,
+        addAsin,
+        delAsin,
+        canAdd,
+        getValidAsins,
+        hasValidAsins,
+      }}
     >
       {children}
     </AsinsContext.Provider>
