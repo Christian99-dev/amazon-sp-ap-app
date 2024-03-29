@@ -1,4 +1,5 @@
 import { CountryProduct } from "../../../context/pricingContext";
+import getFlag from "../../../lib/getFlag";
 
 const PricingTable = ({
   listingOffers,
@@ -8,10 +9,13 @@ const PricingTable = ({
   return (
     <div className="flex w-full h-full">
       {listingOffers.map((item, index) => (
-        <div key={index} className="flex-1 h-full text-center even:bg-slate-100">
+        <div
+          key={index}
+          className="flex-1 h-full text-center even:bg-slate-100"
+        >
           <img
             className="object-fill h-20 p-3 m-auto"
-            src={`/flags/${item.countryCode}.svg`}
+            src={getFlag(item.countryCode)}
           ></img>
 
           {item.prices.map((price, index) => (
