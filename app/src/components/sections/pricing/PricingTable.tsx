@@ -8,10 +8,14 @@ const PricingTable = ({
   return (
     <table className="flex w-full h-full">
       {listingOffers.map((item) => (
-        <div className="w-20 h-full p-2 text-center bg-slate-400">
-          <h1>{item.countryCode}</h1>
+        <div className="flex-1 h-full text-center even:bg-slate-100">
+          <h1 className="py-3 border-b-2 border-b-slate-400">
+            {item.countryCode}
+          </h1>
           {item.prices.map((price) => (
-            <div>{price}</div>
+            <div className="py-4 text-xs">
+              {price} <span className="text-[10px]"> {item.CurrencyCode}</span>
+            </div>
           ))}
         </div>
       ))}

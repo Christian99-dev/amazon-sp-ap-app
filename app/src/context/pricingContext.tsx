@@ -31,10 +31,104 @@ export const usePricingContext = () => {
   return context;
 };
 
+const dummy = [
+    {
+        "countryCode": "ES",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "12.08",
+            "18.52",
+            "18.80"
+        ]
+    },
+    {
+        "countryCode": "UK",
+        "CurrencyCode": "GBP",
+        "prices": [
+            "18.79",
+            "18.79"
+        ]
+    },
+    {
+        "countryCode": "FR",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "10.90",
+            "14.99",
+            "20.54"
+        ]
+    },
+    {
+        "countryCode": "BE",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "13.99",
+            "20.99"
+        ]
+    },
+    {
+        "countryCode": "NL",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "10.83",
+            "12.95",
+            "20.99"
+        ]
+    },
+    {
+        "countryCode": "DE",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "11.89",
+            "12.99",
+            "12.99"
+        ]
+    },
+    {
+        "countryCode": "IT",
+        "CurrencyCode": "EUR",
+        "prices": [
+            "12.46",
+            "17.99",
+            "20.39"
+        ]
+    },
+    {
+        "countryCode": "SE",
+        "CurrencyCode": "SEK",
+        "prices": [
+            "152.00",
+            "215.98"
+        ]
+    },
+    {
+        "countryCode": "PL",
+        "CurrencyCode": "PLN",
+        "prices": [
+            "64.00",
+            "91.49"
+        ]
+    },
+    {
+        "countryCode": "CA",
+        "CurrencyCode": "CAD",
+        "prices": [
+            "34.86"
+        ]
+    },
+    {
+        "countryCode": "US",
+        "CurrencyCode": "USD",
+        "prices": [
+            "26.67"
+        ]
+    }
+]
+
 // Provider-Komponente, um den Kontext bereitzustellen
 export const PricingProvider = ({ children }: any) => {
   // State
-  const [currentResponse, setCurrentResponse] = useState<CountryProduct[]>([]);
+  const [currentResponse, setCurrentResponse] = useState<CountryProduct[]>(dummy);
   const [isLoading, setIsLoading] = useState(false);
 
   // Uses..
@@ -153,7 +247,14 @@ export const PricingProvider = ({ children }: any) => {
 
     switch (ipcResponse.code) {
       case 21: {
-        setCurrentResponse(parseItems(ipcResponse.response));
+        const parsedItems = parseItems(ipcResponse.response);
+
+        if (parsedItems.length <= 0) {
+          showToast("ASIN Zurzeit nicht Gelistet", "error")
+          break;
+        }
+
+        setCurrentResponse(parsedItems);
         break;
       }
 
