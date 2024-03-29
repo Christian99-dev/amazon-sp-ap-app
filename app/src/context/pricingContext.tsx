@@ -128,7 +128,7 @@ const dummy = [
 // Provider-Komponente, um den Kontext bereitzustellen
 export const PricingProvider = ({ children }: any) => {
   // State
-  const [currentResponse, setCurrentResponse] = useState<CountryProduct[]>(dummy);
+  const [currentResponse, setCurrentResponse] = useState<CountryProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Uses..

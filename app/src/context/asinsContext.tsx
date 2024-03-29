@@ -27,7 +27,7 @@ export const useAsinsContext = () => {
 
 // Provider-Komponente, um den Kontext bereitzustellen
 export const AsinsProvider = ({ children }: any) => {
-  const [asins, setAsins] = useState<string[]>(["B0BG51X88P" ,"B0BG51X8333"]);
+  const [asins, setAsins] = useState<string[]>([""]);
 
   const handleChange = (index: number, value: string) => {
     const newAsins = [...asins];
