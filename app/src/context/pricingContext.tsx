@@ -229,7 +229,6 @@ export const PricingProvider = ({ children }: any) => {
      */
     setIsLoading(true);
 
-    //...
     let ipcResponse;
 
     try {
