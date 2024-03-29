@@ -1,10 +1,12 @@
 import { useAsinsContext } from "../../../context/asinsContext";
+import { usePricingContext } from "../../../context/pricingContext";
 import { isAsin } from "../../../lib/regex";
 import Button from "../../shared/Button";
 import Input from "../../shared/Input";
 
 const AsinsBox = ({ className }: { className?: string }) => {
   const { asins, handleChange, addAsin, delAsin, canAdd } = useAsinsContext();
+  const { startSearching } = usePricingContext();
 
   const handleInputChange = (index: number, value: string) => {
     handleChange(index, value);
@@ -18,6 +20,14 @@ const AsinsBox = ({ className }: { className?: string }) => {
     <div
       className={`${className} flex flex-row gap-2 align-center box flex-wrap`}
     >
+      <Button
+        text="Suche"
+        size="sm"
+        onClick={() => {
+          startSearching();
+        }}
+      />
+
       <Button disabled={canAdd} onClick={addAsin} size="sm" text="Hinzufügen" />
       {asins.map((asin, index) => (
         <Input

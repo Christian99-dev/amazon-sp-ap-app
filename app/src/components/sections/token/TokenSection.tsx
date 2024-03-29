@@ -12,6 +12,7 @@ const Token = ({ className }: { className?: string }) => {
     manageTokenState,
   } = useTokenContext();
 
+
   return (
     <div className={`${className} box`}>
       <h1 className="pb-2">Access Token</h1>

@@ -1,21 +1,21 @@
 // prettier-ignore
 const marketplaceDataConfig: CountryData[] = [
   // EU
-  { countryName: "Spain",           countryCode: "ES", marketplaceId: "A1RKKUPIHCS9HS", region: "eu", active: true },
-  { countryName: "United Kingdom",  countryCode: "UK", marketplaceId: "A1F83G8C2ARO7P", region: "eu", active: true },
-  { countryName: "France",          countryCode: "FR", marketplaceId: "A13V1IB3VIYZZH", region: "eu", active: true },
-  { countryName: "Belgium",         countryCode: "BE", marketplaceId: "AMEN7PMS3EDWL",  region: "eu", active: true },
-  { countryName: "Netherlands",     countryCode: "NL", marketplaceId: "A1805IZSGTT6HS", region: "eu", active: true },
-  { countryName: "Germany",         countryCode: "DE", marketplaceId: "A1PA6795UKMFR9", region: "eu", active: true },
-  { countryName: "Italy",           countryCode: "IT", marketplaceId: "APJ6JRA9NG5V4",  region: "eu", active: true },
-  { countryName: "Sweden",          countryCode: "SE", marketplaceId: "A2NODRKZP88ZB9", region: "eu", active: true },
-  { countryName: "Poland",          countryCode: "PL", marketplaceId: "A1C3SOZRARQ6R3", region: "eu", active: true },
+  { countryName: "Spain",           countryCode: "ES", marketplaceId: "A1RKKUPIHCS9HS", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "United Kingdom",  countryCode: "UK", marketplaceId: "A1F83G8C2ARO7P", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "France",          countryCode: "FR", marketplaceId: "A13V1IB3VIYZZH", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Belgium",         countryCode: "BE", marketplaceId: "AMEN7PMS3EDWL",  region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Netherlands",     countryCode: "NL", marketplaceId: "A1805IZSGTT6HS", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Germany",         countryCode: "DE", marketplaceId: "A1PA6795UKMFR9", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Italy",           countryCode: "IT", marketplaceId: "APJ6JRA9NG5V4",  region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Sweden",          countryCode: "SE", marketplaceId: "A2NODRKZP88ZB9", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
+  { countryName: "Poland",          countryCode: "PL", marketplaceId: "A1C3SOZRARQ6R3", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
 
   // NA
-  { countryName: "Canada",          countryCode: "CA", marketplaceId: "A2EUQ1WTGCTBG2", region: "na", active: true },
-  { countryName: "USA",             countryCode: "US", marketplaceId: "ATVPDKIKX0DER",  region: "na", active: true },
-  { countryName: "Mexico",          countryCode: "MX", marketplaceId: "A1AM78C64UM0Y8", region: "na", active: true },
-  { countryName: "Brazil",          countryCode: "BR", marketplaceId: "A2Q3Y263D00KWC", region: "na", active: true },
+  { countryName: "Canada",          countryCode: "CA", marketplaceId: "A2EUQ1WTGCTBG2", region: "na", active: true, endpoint: "https://sellingpartnerapi-na.amazon.com" },
+  { countryName: "USA",             countryCode: "US", marketplaceId: "ATVPDKIKX0DER",  region: "na", active: true, endpoint: "https://sellingpartnerapi-na.amazon.com" },
+  { countryName: "Mexico",          countryCode: "MX", marketplaceId: "A1AM78C64UM0Y8", region: "na", active: true, endpoint: "https://sellingpartnerapi-na.amazon.com" },
+  { countryName: "Brazil",          countryCode: "BR", marketplaceId: "A2Q3Y263D00KWC", region: "na", active: true, endpoint: "https://sellingpartnerapi-na.amazon.com" },
 ];
 
 export const getRegionName = (regionCode: "na" | "eu"): string => {
@@ -27,6 +27,14 @@ export const getRegionName = (regionCode: "na" | "eu"): string => {
   }
 };
 
+export const getCountryCodeFromMarketplaceID = (marketplaceId: string): string | undefined => {
+  const foundEntry = marketplaceDataConfig.find(
+    (data) => data.marketplaceId === marketplaceId
+  );
+
+  return foundEntry?.countryCode; // Return countryCode if found, otherwise undefined
+};
+
 // Types
 export type CountryData = {
   countryName: string;
@@ -34,6 +42,7 @@ export type CountryData = {
   marketplaceId: string;
   region: Region;
   active: boolean;
+  endpoint: string;
 };
 
 export type Region = "na" | "eu";

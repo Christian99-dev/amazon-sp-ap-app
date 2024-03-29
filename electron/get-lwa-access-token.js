@@ -1,10 +1,6 @@
-module.exports = async (
-  client_id,
-  client_secret,
-  refresh_token
-) => {
+module.exports = async (client_id, client_secret, refresh_token) => {
   // Testflag
-  let testing = false; 
+  let testing = false;
   let response;
 
   if (testing) {
@@ -17,32 +13,34 @@ module.exports = async (
           statusText: "OK",
           json: async () => {
             return {
-              access_token: 'test_' + Math.random().toString()
+              access_token: "test_" + Math.random().toString(),
             };
-          }
+          },
         });
       }, 500);
     });
   } else {
     // Normaler Fetch für den echten Aufruf
-    response = await fetch("https://api.amazon.com/auth/o2/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        grant_type: "refresh_token",
-        refresh_token: refresh_token,
-        client_id: client_id,
-        client_secret: client_secret,
-      }),
-    });
+    try {
+      response = await fetch("https://api.amazon.com/auth/o2/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          refresh_token: refresh_token,
+          client_id: client_id,
+          client_secret: client_secret,
+        }),
+      });
+    } catch (error) {
+      throw new Error("Unbekannter Fehler");
+    }
   }
-  
+
   if (!response.ok) {
-    throw new Error(
-      `${response.status} ${response.statusText}`
-    );
+    throw new Error(`${response.status} ${response.statusText}`);
   }
 
   const data = await response.json();

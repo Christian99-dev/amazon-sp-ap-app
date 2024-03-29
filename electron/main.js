@@ -13,6 +13,7 @@ const {
 
 // Amazon API
 const getLWAAccessToken = require("./get-lwa-access-token");
+const getItemListingBatchAsin = require("./get-item-listing-batch-asin");
 
 /**
  * CONFIG
@@ -38,7 +39,7 @@ const createMainWindow = () => {
     },
   });
 
-  const startUrl = HTML_DEVELOPMENT_PATH
+  const startUrl = HTML_DEVELOPMENT_PATH;
 
   window.loadURL(startUrl);
 };
@@ -143,4 +144,77 @@ ipcMain.handle("manage_token", async (_, data) => {
         currentAccessToken
       );
   }
+});
+
+ipcMain.handle("get_listing_for_asins", async (_, data) => {
+  // response schema
+  const getPricingAsinResponse = (code, message, response) => {
+    return {
+      code: code,
+      message: message,
+      response: response,
+    };
+  };
+
+  // get payload
+  const { coutrys, asins, access_token_eu, access_token_na } = data;
+
+  // Create batches
+  let eu_batch = [];
+  let na_batch = [];
+
+  asins.forEach((asin) => {
+    coutrys
+      .filter((c) => c.region === "eu")
+      .forEach((country) => {
+        eu_batch.push({
+          uri: `/products/pricing/v0/items/${asin}/offers`,
+          method: "GET",
+          MarketplaceId: country.marketplaceId,
+          ItemCondition: "New",
+        });
+      });
+  });
+
+  asins.forEach((asin) => {
+    coutrys
+      .filter((c) => c.region === "na")
+      .forEach((country) => {
+        na_batch.push({
+          uri: `/products/pricing/v0/items/${asin}/offers`,
+          method: "GET",
+          MarketplaceId: country.marketplaceId,
+          ItemCondition: "New",
+        });
+      });
+  });
+
+  // Placeholder for token
+  let response_eu;
+  let response_na;
+
+  try {
+    if (eu_batch.length > 0)
+      response_eu = await getItemListingBatchAsin(
+        "eu",
+        access_token_eu,
+        eu_batch
+      );
+
+    if (na_batch.length > 0)
+      response_na = await getItemListingBatchAsin(
+        "na",
+        access_token_na,
+        na_batch
+      );
+  } catch (error) {
+    // Error fetch from amazon
+    return getPricingAsinResponse(42, `Amazon API Fehler ${error}`, null);
+  }
+
+  // Success
+  return getPricingAsinResponse(21, `Erfolgreich gefetcht`, {
+    response_eu: response_eu,
+    response_na: response_na,
+  });
 });

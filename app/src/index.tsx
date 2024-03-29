@@ -17,19 +17,19 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
-    <ToastProvider>
-      <CountriesProvider>
-        <TokenProvider>
-          <AsinsProvider>
-            <PricingProvider>
-              <App />
-            </PricingProvider>
-          </AsinsProvider>
-        </TokenProvider>
-      </CountriesProvider>
-    </ToastProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ToastProvider>
+    <CountriesProvider>
+      <TokenProvider>
+        <AsinsProvider>
+          <PricingProvider>
+            <App />
+          </PricingProvider>
+        </AsinsProvider>
+      </TokenProvider>
+    </CountriesProvider>
+  </ToastProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
