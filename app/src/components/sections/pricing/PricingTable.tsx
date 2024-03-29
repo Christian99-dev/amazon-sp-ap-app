@@ -6,7 +6,7 @@ const PricingTable = ({
   listingOffers: CountryProduct[];
 }) => {
   return (
-    <table className="flex w-full h-full">
+    <div className="flex w-full h-full">
       {listingOffers.map((item, index) => (
         <div key={index} className="flex-1 h-full text-center even:bg-slate-100">
           <img
@@ -21,7 +21,7 @@ const PricingTable = ({
           ))}
         </div>
       ))}
-    </table>
+    </div>
   );
 };
 
