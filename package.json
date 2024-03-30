@@ -15,7 +15,7 @@
     "sellingpartner-api",
     "asin"
   ],
-  "author": "k.christian9@web.de",
+  "author": "Christian Keller",
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"
