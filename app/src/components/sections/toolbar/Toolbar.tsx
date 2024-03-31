@@ -6,35 +6,24 @@ import Button from "../../shared/Button";
 import Input from "../../shared/Input";
 
 const AsinsBox = ({ className }: { className?: string }) => {
-  const { asins, handleChange, addAsin, delAsin, canAdd } = useAsinsContext();
+  const { asin, setAsin, isValidAsin } = useAsinsContext();
   const { startSearching, isLoading } = usePricingContext();
-  const {toggleMenu} = useSideMenu();
-
-  const handleInputChange = (index: number, value: string) => {
-    handleChange(index, value);
-  };
-
-  const handleDeleteAsin = (index: number) => {
-    delAsin(index);
-  };
+  const { toggleMenu } = useSideMenu();
 
   return (
     <div
       className={`${className} flex flex-row gap-2 align-center box flex-wrap`}
     >
       <Button onClick={toggleMenu} icon="settings" />
-      {asins.map((asin, index) => (
-        <Input
-          status={isAsin(asin) ? "success" : "error"}
-          key={index}
-          value={asin}
-          placeholder={`ASIN ${index + 1}`}
-          onChange={(event) => handleInputChange(index, event.target.value)}
-          onButton={() => startSearching()}
-          iconName={asins.length > 0 ? "search" : undefined}
-          disableButton={isLoading}
-        />
-      ))}
+      <Input
+        status={isValidAsin ? "success" : "error"}
+        value={asin}
+        placeholder={`ASIN`}
+        onChange={(event) => setAsin(event.target.value)}
+        onButton={() => startSearching()}
+        iconName={"search"}
+        disableButton={isLoading}
+      />
     </div>
   );
 };
