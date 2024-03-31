@@ -235,7 +235,6 @@ ipcMain.handle("change_credentials", async (_, data) => {
 
   // get payload
   const { id, value } = data;
-
   /**
    * Guards
    */
@@ -249,6 +248,9 @@ ipcMain.handle("change_credentials", async (_, data) => {
       break;
     case "client_secret":
       storageAPI.writeClientSecret(value);
+      break;
+    case "seller_id":
+      storageAPI.writeSellerID(value);
       break;
     case "refresh_token_eu":
       storageAPI.writeRefreshToken("eu", value);
@@ -285,6 +287,9 @@ ipcMain.handle("get_credentials", async (_, data) => {
       break;
     case "client_secret":
       value = storageAPI.readClientSecret();
+      break;
+    case "seller_id":
+      value = storageAPI.readSellerID();
       break;
     case "refresh_token_eu":
       value = storageAPI.readRefreshToken("eu");

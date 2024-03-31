@@ -1,3 +1,4 @@
+import { PossibleCredentialIDs } from "./context/credentlalsContext";
 import { CountryData } from "./lib/countrys";
 import type { API } from "./types/electronAPI";
 
@@ -49,7 +50,7 @@ type GetCredentialsIPCResponse = {
   code: number;
   message: string;
   value: string;
-}
+};
 
 declare global {
   interface Window {
@@ -67,20 +68,12 @@ declare global {
       ) => Promise<GetListingForAsinsIPCResponse>;
 
       changeCredentials: (
-        id:
-          | "client_id"
-          | "client_secret"
-          | "refresh_token_eu"
-          | "refresh_token_na",
+        id: PossibleCredentialIDs,
         value: string
       ) => Promise<ChangeCredentialsIPCResponse>;
 
       getCredentials: (
-        id:
-          | "client_id"
-          | "client_secret"
-          | "refresh_token_eu"
-          | "refresh_token_na"
+        id:PossibleCredentialIDs
       ) => Promise<GetCredentialsIPCResponse>;
     };
   }

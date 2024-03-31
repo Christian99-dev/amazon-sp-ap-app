@@ -19,6 +19,7 @@ const Sidemenu = () => {
   const credentialInputsOnSidebar: { label: string; id: PossibleCredentialIDs }[] = [
     { label: "Client ID", id: "client_id" },
     { label: "Client Secret", id: "client_secret" },
+    { label: "Seller ID", id: "seller_id" },
     { label: "Refresh Token EU", id: "refresh_token_eu" },
     { label: "Refresh Token NA", id: "refresh_token_na" },
   ];

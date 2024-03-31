@@ -11,12 +11,14 @@ type CredentialsContextType = {
     client_secret: string;
     refresh_token_eu: string;
     refresh_token_na: string;
+    seller_id: string;
   };
   credentialsLabel: {
     client_id: string;
     client_secret: string;
     refresh_token_eu: string;
     refresh_token_na: string;
+    seller_id: string;
   };
   isLoading: boolean;
   changeCredentialInputState: (
@@ -30,13 +32,15 @@ export type PossibleCredentialIDs =
   | "client_id"
   | "client_secret"
   | "refresh_token_eu"
-  | "refresh_token_na";
+  | "refresh_token_na"
+  | "seller_id";
 
 const initialCredentials = {
   client_id: "",
   client_secret: "",
   refresh_token_eu: "",
   refresh_token_na: "",
+  seller_id: ""
 };
 
 const CredentialsContext = createContext<CredentialsContextType | undefined>(
@@ -166,6 +170,7 @@ export const CredentialsProvider = ({
       "client_secret",
       "refresh_token_eu",
       "refresh_token_na",
+      "seller_id"
     ];
 
     credIds.forEach((id) => updateCredentialLabelPullFromStorage(id));
