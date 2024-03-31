@@ -18,7 +18,9 @@
   "author": "Christian Keller",
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "dot-prop": "^8.0.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.2.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.3.1",
@@ -29,8 +31,5 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.3.1",
     "@electron-forge/plugin-fuses": "^7.3.1",
     "electron": "^29.1.5"
-  },
-  "electronmon": {
-    "patterns": ["!electron/static/**"]
   }
 }

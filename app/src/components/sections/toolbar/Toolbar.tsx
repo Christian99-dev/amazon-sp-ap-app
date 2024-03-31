@@ -1,12 +1,14 @@
 import { useAsinsContext } from "../../../context/asinsContext";
 import { usePricingContext } from "../../../context/pricingContext";
+import { useSideMenu } from "../../../context/sidemenuContext";
 import { isAsin } from "../../../lib/regex";
 import Button from "../../shared/Button";
 import Input from "../../shared/Input";
 
 const AsinsBox = ({ className }: { className?: string }) => {
   const { asins, handleChange, addAsin, delAsin, canAdd } = useAsinsContext();
-  const { startSearching } = usePricingContext();
+  const { startSearching, isLoading } = usePricingContext();
+  const {toggleMenu} = useSideMenu();
 
   const handleInputChange = (index: number, value: string) => {
     handleChange(index, value);
@@ -20,15 +22,7 @@ const AsinsBox = ({ className }: { className?: string }) => {
     <div
       className={`${className} flex flex-row gap-2 align-center box flex-wrap`}
     >
-      <Button
-        text="Suche"
-        size="sm"
-        onClick={() => {
-          startSearching();
-        }}
-      />
-
-      <Button disabled={canAdd} onClick={addAsin} size="sm" text="Hinzufügen" />
+      <Button onClick={toggleMenu} icon="settings" />
       {asins.map((asin, index) => (
         <Input
           status={isAsin(asin) ? "success" : "error"}
@@ -36,8 +30,9 @@ const AsinsBox = ({ className }: { className?: string }) => {
           value={asin}
           placeholder={`ASIN ${index + 1}`}
           onChange={(event) => handleInputChange(index, event.target.value)}
-          onDeleteButton={() => handleDeleteAsin(index)}
-          hasDeleteButton={asins.length > 1} // Only show delete button if there's more than 1 ASIN
+          onButton={() => startSearching()}
+          iconName={asins.length > 0 ? "search" : undefined}
+          disableButton={isLoading}
         />
       ))}
     </div>

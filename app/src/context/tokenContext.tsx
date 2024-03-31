@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useToastContext } from "./toastContext";
+import { ManageTokenIPCResponse } from "../interface";
 
 type TokenState = {
   accessTokenEU: string;
@@ -41,6 +42,14 @@ export const TokenProvider = ({ children }: any) => {
   });
 
   /**
+   * On App Start
+   * */
+  useEffect(() => {
+    manageTokenState("eu", "get");
+    manageTokenState("na", "get");
+  }, []);
+
+  /**
    * Actions
    * */
   const manageTokenState = async (
@@ -54,14 +63,14 @@ export const TokenProvider = ({ children }: any) => {
       return;
     }
     
-    let ipcResponse;
+    let manageTokenIpcResponse: ManageTokenIPCResponse;
 
-    // Loading = true
+    // Start loading
     updateLoadingState(region, true);
 
     // Token wird aus der StorageApi geholt (entweder neu generiert oder refresht)
     try {
-      ipcResponse = await window.api.manageToken(region, action);
+      manageTokenIpcResponse = await window.api.manageToken(region, action);
     } catch(error) {
       showToast("Unbekannter Fehler", "error");
       updateLoadingState(region, false);
@@ -69,20 +78,20 @@ export const TokenProvider = ({ children }: any) => {
     }
 
     // Auswerten des ereignis
-    switch (ipcResponse.code) {
+    switch (manageTokenIpcResponse.code) {
       case 41:
       case 42: {
-        showToast(ipcResponse.message, "error");
+        showToast(manageTokenIpcResponse.message, "error");
         break;
       }
       case 21: {
-        updateTokenState(region, ipcResponse.access_token);
-        showToast(ipcResponse.message, "success");
+        updateTokenState(region, manageTokenIpcResponse.access_token);
+        showToast(manageTokenIpcResponse.message, "success");
         break;
       }
       case 22: {
-        updateTokenState(region, ipcResponse.access_token);
-        showToast(ipcResponse.message, "info");
+        updateTokenState(region, manageTokenIpcResponse.access_token);
+        showToast(manageTokenIpcResponse.message, "info");
         break;
       }
     }

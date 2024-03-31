@@ -1,12 +1,12 @@
 // prettier-ignore
 const marketplaceDataConfig: CountryData[] = [
   // EU
+  { countryName: "Germany",         countryCode: "DE", marketplaceId: "A1PA6795UKMFR9", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Spain",           countryCode: "ES", marketplaceId: "A1RKKUPIHCS9HS", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "United Kingdom",  countryCode: "UK", marketplaceId: "A1F83G8C2ARO7P", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "France",          countryCode: "FR", marketplaceId: "A13V1IB3VIYZZH", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Belgium",         countryCode: "BE", marketplaceId: "AMEN7PMS3EDWL",  region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Netherlands",     countryCode: "NL", marketplaceId: "A1805IZSGTT6HS", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
-  { countryName: "Germany",         countryCode: "DE", marketplaceId: "A1PA6795UKMFR9", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Italy",           countryCode: "IT", marketplaceId: "APJ6JRA9NG5V4",  region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Sweden",          countryCode: "SE", marketplaceId: "A2NODRKZP88ZB9", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },
   { countryName: "Poland",          countryCode: "PL", marketplaceId: "A1C3SOZRARQ6R3", region: "eu", active: true, endpoint: "https://sellingpartnerapi-eu.amazon.com" },

@@ -1,6 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
-const url = require("url");
 
 // Storage API
 const {
@@ -9,11 +8,12 @@ const {
   readAccessToken,
   readClientID,
   readClientSecret,
-} = require("./storageAPI");
+} = require("./storage/storageAPI");
 
 // Amazon API
-const getLWAAccessToken = require("./get-lwa-access-token");
-const getItemListingBatchAsin = require("./get-item-listing-batch-asin");
+const getLWAAccessToken = require("./amazon/get-lwa-access-token");
+const getItemListingBatchAsin = require("./amazon/get-item-listing-batch-asin");
+const storageAPI = require("./storage/storageAPI");
 
 /**
  * CONFIG
@@ -66,7 +66,7 @@ app.on("window-all-closed", function () {
  * */
 ipcMain.handle("manage_token", async (_, data) => {
   // response schema
-  const manageTokenResponse = (code, message, access_token) => {
+  const responseSchema = (code, message, access_token) => {
     return {
       code: code,
       message: message,
@@ -85,9 +85,11 @@ ipcMain.handle("manage_token", async (_, data) => {
   const client_id = readClientID();
   const client_secret = readClientSecret();
 
-  // Wenn daten nicht vollständig,
+  /**
+   * Guards
+   */
   if (refreshToken == "" || client_id == "" || client_secret == "")
-    return manageTokenResponse(41, "Benutzerdaten Unvollständig", null);
+    return responseSchema(41, "Benutzerdaten Unvollständig", null);
 
   // Switch statement to determine action based on input data
   switch (action) {
@@ -100,13 +102,13 @@ ipcMain.handle("manage_token", async (_, data) => {
           refreshToken
         );
       } catch (error) {
-        return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);
+        return responseSchema(42, `Amazon API Fehler ${error}`, null);
       }
 
       // Writing to storage
       writeAccessToken(region, currentAccessToken);
 
-      return manageTokenResponse(
+      return responseSchema(
         21,
         `${region.toUpperCase()} Token Erfolgreich Refresht`,
         currentAccessToken
@@ -126,20 +128,22 @@ ipcMain.handle("manage_token", async (_, data) => {
             refreshToken
           );
         } catch (error) {
-          return manageTokenResponse(42, `Amazon API Fehler ${error}`, null);
+          return responseSchema(42, `Amazon API Fehler ${error}`, null);
         }
 
         // Writing to storage
         writeAccessToken(region, currentAccessToken);
 
-        return manageTokenResponse(
+        // Returning to app
+        return responseSchema(
           21,
           `${region.toUpperCase()} Token Erfolgreich Refresht`,
           currentAccessToken
         );
       }
 
-      return manageTokenResponse(
+      // Returning to app
+      return responseSchema(
         22,
         `${region.toUpperCase()} Token Vorhanden`,
         currentAccessToken
@@ -149,7 +153,7 @@ ipcMain.handle("manage_token", async (_, data) => {
 
 ipcMain.handle("get_listing_for_asins", async (_, data) => {
   // response schema
-  const getPricingAsinResponse = (code, message, response) => {
+  const responseSchema = (code, message, response) => {
     return {
       code: code,
       message: message,
@@ -190,7 +194,7 @@ ipcMain.handle("get_listing_for_asins", async (_, data) => {
       });
   });
 
-  // Placeholder for token
+  // Placeholder for amazon response
   let response_eu;
   let response_na;
 
@@ -210,12 +214,90 @@ ipcMain.handle("get_listing_for_asins", async (_, data) => {
       );
   } catch (error) {
     // Error fetch from amazon
-    return getPricingAsinResponse(42, `Amazon API Fehler ${error}`, null);
+    return responseSchema(42, `Amazon API Fehler ${error}`, null);
   }
 
   // Success
-  return getPricingAsinResponse(21, `Erfolgreich gefetcht`, {
+  return responseSchema(21, `Erfolgreich gefetcht`, {
     response_eu: response_eu,
     response_na: response_na,
   });
+});
+
+ipcMain.handle("change_credentials", async (_, data) => {
+  // response schema
+  const responseSchema = (code, message) => {
+    return {
+      code: code,
+      message: message,
+    };
+  };
+
+  // get payload
+  const { id, value } = data;
+
+  /**
+   * Guards
+   */
+  if (value === "" || value === undefined)
+    return responseSchema(41, "Der Inhalt darf nicht Leer sein");
+
+  // Writing value
+  switch (id) {
+    case "client_id":
+      storageAPI.writeClientID(value);
+      break;
+    case "client_secret":
+      storageAPI.writeClientSecret(value);
+      break;
+    case "refresh_token_eu":
+      storageAPI.writeRefreshToken("eu", value);
+      break;
+    case "refresh_token_na":
+      storageAPI.writeRefreshToken("na", value);
+      break;
+    default:
+      return responseSchema(42, "ID nicht vorhanden");
+  }
+
+  return responseSchema(21, "Benutzerdaten erfolgreich Aktualisiert");
+});
+
+ipcMain.handle("get_credentials", async (_, data) => {
+  // response schema
+  const responseSchema = (code, message, value) => {
+    return {
+      code: code,
+      message: message,
+      value: value,
+    };
+  };
+
+  // get payload
+  const { id } = data;
+
+  let value;
+
+  // Writing value
+  switch (id) {
+    case "client_id":
+      value = storageAPI.readClientID();
+      break;
+    case "client_secret":
+      value = storageAPI.readClientSecret();
+      break;
+    case "refresh_token_eu":
+      value = storageAPI.readRefreshToken("eu");
+      break;
+    case "refresh_token_na":
+      value = storageAPI.readRefreshToken("na");
+      break;
+    default:
+      return responseSchema(41, "ID nicht vorhanden", null);
+  }
+
+  if (value === "" || value === undefined)
+    return responseSchema(42, "Benutzerdatenfeld Leer", null);
+
+  return responseSchema(21, "Benutzerdaten im Storage Gefunden", value);
 });

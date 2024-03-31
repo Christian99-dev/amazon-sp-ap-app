@@ -17,7 +17,7 @@ const TokenText = ({
 }) => {
   return (
     <div className={`${className} flex items-center`}>
-      <Button onClick={onClickNew} disabled={isLoading} text="New" size="sm" />
+      <Button className="mr-2" icon="refresh" onClick={onClickNew} disabled={isLoading} text="New"/>
       <span className="mr-2 text-sm font-medium text-black">{region}:</span>
       {!isLoading ? (
         <span className="text-[13px] font-bold text-green-500">

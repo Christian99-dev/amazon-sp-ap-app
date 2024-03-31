@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 
@@ -11,6 +10,8 @@ import { CountriesProvider } from "./context/countryContext";
 import { AsinsProvider } from "./context/asinsContext";
 import { PricingProvider } from "./context/pricingContext";
 import { ToastProvider } from "./context/toastContext";
+import { SideMenuProvider } from "./context/sidemenuContext";
+import { CredentialsProvider } from "./context/credentlalsContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,17 +19,21 @@ const root = ReactDOM.createRoot(
 
 root.render(
   // <React.StrictMode>
-  <ToastProvider>
-    <CountriesProvider>
-      <TokenProvider>
-        <AsinsProvider>
-          <PricingProvider>
-            <App />
-          </PricingProvider>
-        </AsinsProvider>
-      </TokenProvider>
-    </CountriesProvider>
-  </ToastProvider>
+    <ToastProvider>
+      <SideMenuProvider>
+        <CredentialsProvider>
+          <CountriesProvider>
+            <TokenProvider>
+              <AsinsProvider>
+                <PricingProvider>
+                  <App />
+                </PricingProvider>
+              </AsinsProvider>
+            </TokenProvider>
+          </CountriesProvider>
+        </CredentialsProvider>
+      </SideMenuProvider>
+    </ToastProvider>
   // </React.StrictMode>
 );
 

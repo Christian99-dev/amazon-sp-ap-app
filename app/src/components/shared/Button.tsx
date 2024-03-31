@@ -1,30 +1,30 @@
+import Icon, { iconNames } from "./Icon";
+
 const Button = ({
   disabled = false,
   text,
-  size = "md",
   onClick,
+  icon: iconName,
+  className
 }: {
   disabled?: boolean;
-  text: string;
-  size?: "sm" | "md";
+  text?: string;
   onClick: () => void;
+  icon?: iconNames;
+  className?: string
 }) => {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       type="button"
-      className={`text-white text-nowrap h-min w-min ${
+      className={`${className} text-white text-nowrap h-min rounded-lg font-medium text-center inline-flex items-center text-xs ${
         disabled
           ? "bg-blue-300 cursor-not-allowed"
           : "bg-blue-600 hover:bg-blue-800"
-      } font-medium text-center me-2  inline-flex items-center ${
-        size === "sm"
-          ? "text-xs px-2 py-1.5 rounded-md"
-          : "text-sm px-5 py-2 rounded-lg"
-      }`}
+      } ${iconName ? "px-1.5 py-1" : "px-2 py-1.5"}`}
     >
-      {text}
+      {iconName ? <Icon className="h-5" iconName={iconName} /> : text}
     </button>
   );
 };
