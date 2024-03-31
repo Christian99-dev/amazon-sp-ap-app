@@ -26,7 +26,7 @@ type CredentialsContextType = {
   setCredentialStorage: (id: PossibleCredentialIDs) => void;
 };
 
-type PossibleCredentialIDs =
+export type PossibleCredentialIDs =
   | "client_id"
   | "client_secret"
   | "refresh_token_eu"
