@@ -3,19 +3,28 @@ import { useAsinsContext } from "./asinsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
 import { useToastContext } from "./toastContext";
-import { GetListingForAsinsResponse } from "../interface";
 import { getCountryCodeFromMarketplaceID } from "../lib/countrys";
+import { ItemsOnMarketplaceAmazonResponse } from "../interface";
 
 interface PricingContextType {
   startSearching: () => void;
-  currentResponse: CountryProduct[];
+  currentProducts: ProductsInMarketplace[];
   isLoading: boolean;
 }
 
-export interface CountryProduct {
+export interface ProductsInMarketplace {
   countryCode: string;
-  CurrencyCode: string;
-  prices: string[];
+  products: SingleProduct[];
+}
+
+interface SingleProduct {
+  shippingPrice: number;
+  listingPrice: number;
+  landedPrice: number;
+  currencyCode: string;
+  shipsFrom: string;
+  sellerID: string;
+  rating: number;
 }
 
 const PricingContext = createContext<PricingContextType | undefined>(undefined);
@@ -31,68 +40,12 @@ export const usePricingContext = () => {
   return context;
 };
 
-const dummy = [
-  {
-    countryCode: "ES",
-    CurrencyCode: "EUR",
-    prices: ["12.08", "18.52", "18.80"],
-  },
-  {
-    countryCode: "UK",
-    CurrencyCode: "GBP",
-    prices: ["18.79", "18.79"],
-  },
-  {
-    countryCode: "FR",
-    CurrencyCode: "EUR",
-    prices: ["10.90", "14.99", "20.54"],
-  },
-  {
-    countryCode: "BE",
-    CurrencyCode: "EUR",
-    prices: ["13.99", "20.99"],
-  },
-  {
-    countryCode: "NL",
-    CurrencyCode: "EUR",
-    prices: ["10.83", "12.95", "20.99"],
-  },
-  {
-    countryCode: "DE",
-    CurrencyCode: "EUR",
-    prices: ["11.89", "12.99", "12.99"],
-  },
-  {
-    countryCode: "IT",
-    CurrencyCode: "EUR",
-    prices: ["12.46", "17.99", "20.39"],
-  },
-  {
-    countryCode: "SE",
-    CurrencyCode: "SEK",
-    prices: ["152.00", "215.98"],
-  },
-  {
-    countryCode: "PL",
-    CurrencyCode: "PLN",
-    prices: ["64.00", "91.49"],
-  },
-  {
-    countryCode: "CA",
-    CurrencyCode: "CAD",
-    prices: ["34.86"],
-  },
-  {
-    countryCode: "US",
-    CurrencyCode: "USD",
-    prices: ["26.67"],
-  },
-];
-
 // Provider-Komponente, um den Kontext bereitzustellen
 export const PricingProvider = ({ children }: any) => {
   // State
-  const [currentResponse, setCurrentResponse] = useState<CountryProduct[]>([]);
+  const [currentProducts, setCurrentProducts] = useState<
+    ProductsInMarketplace[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Uses..
@@ -103,72 +56,88 @@ export const PricingProvider = ({ children }: any) => {
   } = useTokenContext();
   const { showToast } = useToastContext();
 
+  // Lib
+  const parseAmazonListingItemsToProducts = (
+    itemsOnMarketplaceAmazonResponse: ItemsOnMarketplaceAmazonResponse[]
+  ): ProductsInMarketplace[] => {
+    let products: ProductsInMarketplace[] = [];
+
+    // Go through every marketplace
+    itemsOnMarketplaceAmazonResponse.forEach(
+      ({
+        status: { statusCode },
+        request: { MarketplaceId },
+        body: { payload },
+      }) => {
+        // Prepare
+        let singleProducts: SingleProduct[] = [];
+        let countryCode: string | undefined = "";
+        let offers = [];
+
+        // ASIN not found in marketplace
+        if (statusCode !== 200) return;
+        if(payload.Offers.length === 0) return;
+
+        offers = payload.Offers;
+        
+        // Countrycode
+        countryCode =
+          getCountryCodeFromMarketplaceID(MarketplaceId) || undefined;
+
+        // Marketpalce ID is not found, should happen anyway.
+        if (countryCode === undefined) return;
+
+        // Sortiere die Angebote nach dem Preis absteigend
+        offers.sort((a, b) => {
+          return a.ListingPrice.Amount - b.ListingPrice.Amount;
+        });
+
+        // parse single products
+        singleProducts = offers.map(
+          ({
+            SellerId,
+            ListingPrice: { CurrencyCode, Amount: ListingAmount },
+            Shipping: { Amount: ShippingAmount },
+            ShipsFrom,
+            SellerFeedbackRating: { SellerPositiveFeedbackRating },
+          }) => {
+            return {
+              listingPrice: ListingAmount,
+              shippingPrice: ShippingAmount,
+              landedPrice:
+                Math.round((ListingAmount + ShippingAmount) * 100) / 100,
+              currencyCode: CurrencyCode,
+              shipsFrom: ShipsFrom ? ShipsFrom.Country : "",
+              sellerID: SellerId,
+              rating: SellerPositiveFeedbackRating,
+            };
+          }
+        );
+
+        products.push({
+          countryCode: countryCode,
+          products: singleProducts,
+        });
+      }
+    );
+
+    // Sortiere die Produkte nach dem Ländercode, "DE" zuerst
+    products.sort((a, b) => {
+      if (a.countryCode === "DE") return -1;
+      if (b.countryCode === "DE") return 1;
+      return 0;
+    });
+
+    console.log(products)
+
+    return products;
+  };
+
+  // Actions
   const startSearching = async () => {
     if (!window.api) return;
 
-    setCurrentResponse([]);
-
-    const parseItems = (
-      input: GetListingForAsinsResponse
-    ): CountryProduct[] => {
-      let out: CountryProduct[] = [];
-
-      // Putting all products in 1 array
-      let rawProducts = [];
-      if (input.response_eu) rawProducts.push(...input.response_eu.responses);
-      if (input.response_na) rawProducts.push(...input.response_na.responses);
-
-      // Strip 404´s
-      rawProducts = rawProducts.filter(
-        (product) => product.status.statusCode === 200
-      );
-
-      // Strip total offer 0
-      rawProducts = rawProducts.filter(
-        (product) => product.body.payload.Summary.TotalOfferCount > 0
-      );
-
-      // no products left...
-      if (rawProducts.length === 0) return [];
-
-      // Create CountryProduct objects
-      const productMap = new Map<string, CountryProduct>(); // Use Map for efficient lookup
-
-      rawProducts.forEach((product) => {
-        const marketplaceId = product.body.payload.marketplaceId;
-        const countryCode = getCountryCodeFromMarketplaceID(marketplaceId);
-
-        if (countryCode) {
-          const prices = product.body.payload.Summary.LowestPrices.map(
-            (price) => price.ListingPrice.Amount.toFixed(2)
-          );
-
-          if (productMap.has(countryCode)) {
-            // Country exists, accumulate prices
-            productMap.get(countryCode)!.prices.push(...prices); // Use spread operator for efficient concatenation
-          } else {
-            // New country, add entry
-            productMap.set(countryCode, {
-              countryCode: countryCode,
-              CurrencyCode:
-                product.body.payload.Summary.LowestPrices[0].ListingPrice
-                  .CurrencyCode,
-              prices: prices,
-            });
-          }
-        }
-      });
-
-      // Convert map values to array
-      out = Array.from(productMap.values());
-
-      // Sort by price descending
-      out.forEach((countryProduct) => {
-        countryProduct.prices.sort((a, b) => parseFloat(a) - parseFloat(b));
-      });
-
-      return out;
-    };
+    setCurrentProducts([]);
 
     /**
      * Guards
@@ -194,11 +163,10 @@ export const PricingProvider = ({ children }: any) => {
     setIsLoading(true);
 
     let ipcResponse;
-
     try {
-      ipcResponse = await window.api.getListingForAsins(
+      ipcResponse = await window.api.getListingForAsin(
         selectedCountries,
-        [asin],
+        asin,
         accessTokenEU,
         accessTokenNA
       );
@@ -210,14 +178,17 @@ export const PricingProvider = ({ children }: any) => {
 
     switch (ipcResponse.code) {
       case 21: {
-        const parsedItems = parseItems(ipcResponse.response);
+        const parsedItems = parseAmazonListingItemsToProducts([
+          ...(ipcResponse.response.response_na?.responses || []),
+          ...(ipcResponse.response.response_eu?.responses || []),
+        ]);
 
         if (parsedItems.length <= 0) {
           showToast("ASIN Zurzeit nicht Gelistet", "error");
           break;
         }
 
-        setCurrentResponse(parsedItems);
+        setCurrentProducts(parsedItems);
         break;
       }
 
@@ -232,7 +203,7 @@ export const PricingProvider = ({ children }: any) => {
 
   return (
     <PricingContext.Provider
-      value={{ startSearching, currentResponse, isLoading }}
+      value={{ startSearching, currentProducts, isLoading }}
     >
       {children}
     </PricingContext.Provider>

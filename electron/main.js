@@ -2,18 +2,11 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 
 // Storage API
-const {
-  writeAccessToken,
-  readRefreshToken,
-  readAccessToken,
-  readClientID,
-  readClientSecret,
-} = require("./storage/storageAPI");
+const storageAPI = require("./storage/storageAPI");
 
 // Amazon API
 const getLWAAccessToken = require("./amazon/get-lwa-access-token");
 const getItemListingBatchAsin = require("./amazon/get-item-listing-batch-asin");
-const storageAPI = require("./storage/storageAPI");
 
 /**
  * CONFIG
@@ -81,9 +74,9 @@ ipcMain.handle("manage_token", async (_, data) => {
   let currentAccessToken;
 
   // pulling data from storage
-  const refreshToken = readRefreshToken(region);
-  const client_id = readClientID();
-  const client_secret = readClientSecret();
+  const refreshToken = storageAPI.readRefreshToken(region);
+  const client_id = storageAPI.readClientID();
+  const client_secret = storageAPI.readClientSecret();
 
   /**
    * Guards
@@ -106,7 +99,7 @@ ipcMain.handle("manage_token", async (_, data) => {
       }
 
       // Writing to storage
-      writeAccessToken(region, currentAccessToken);
+      storageAPI.writeAccessToken(region, currentAccessToken);
 
       return responseSchema(
         21,
@@ -116,7 +109,7 @@ ipcMain.handle("manage_token", async (_, data) => {
 
     case "get":
       // Reading access token from storage
-      currentAccessToken = readAccessToken(region);
+      currentAccessToken = storageAPI.readAccessToken(region);
 
       // If token doesn't exist, fetch a new one
       if (currentAccessToken == "") {
@@ -132,7 +125,7 @@ ipcMain.handle("manage_token", async (_, data) => {
         }
 
         // Writing to storage
-        writeAccessToken(region, currentAccessToken);
+        storageAPI.writeAccessToken(region, currentAccessToken);
 
         // Returning to app
         return responseSchema(
@@ -151,7 +144,7 @@ ipcMain.handle("manage_token", async (_, data) => {
   }
 });
 
-ipcMain.handle("get_listing_for_asins", async (_, data) => {
+ipcMain.handle("get_listing_for_asin", async (_, data) => {
   // response schema
   const responseSchema = (code, message, response) => {
     return {
@@ -162,55 +155,48 @@ ipcMain.handle("get_listing_for_asins", async (_, data) => {
   };
 
   // get payload
-  const { coutrys, asins, access_token_eu, access_token_na } = data;
+  const { coutrys, asin, access_token_eu, access_token_na } = data;
 
   // Create batches
-  let eu_batch = [];
-  let na_batch = [];
+  let eu_asin_body = [];
+  let na_asin_body = [];
 
-  asins.forEach((asin) => {
-    coutrys
-      .filter((c) => c.region === "eu")
-      .forEach((country) => {
-        eu_batch.push({
-          uri: `/products/pricing/v0/items/${asin}/offers`,
-          method: "GET",
-          MarketplaceId: country.marketplaceId,
-          ItemCondition: "New",
-        });
-      });
+  // Splitting items according to region
+  coutrys.forEach(({ marketplaceId, region }) => {
+    const item = {
+      uri: `/products/pricing/v0/items/${asin}/offers`,
+      method: "GET",
+      MarketplaceId: marketplaceId,
+      ItemCondition: "New",
+    };
+
+    switch (region) {
+      case "eu":
+        eu_asin_body.push(item);
+        break;
+      case "na":
+        na_asin_body.push(item);
+        break;
+    }
   });
 
-  asins.forEach((asin) => {
-    coutrys
-      .filter((c) => c.region === "na")
-      .forEach((country) => {
-        na_batch.push({
-          uri: `/products/pricing/v0/items/${asin}/offers`,
-          method: "GET",
-          MarketplaceId: country.marketplaceId,
-          ItemCondition: "New",
-        });
-      });
-  });
-
-  // Placeholder for amazon response
-  let response_eu;
-  let response_na;
+  // Placeholder for each amazon response
+  let amazon_response_eu;
+  let amazon_response_na;
 
   try {
-    if (eu_batch.length > 0)
-      response_eu = await getItemListingBatchAsin(
+    if (eu_asin_body.length > 0)
+      amazon_response_eu = await getItemListingBatchAsin(
         "eu",
         access_token_eu,
-        eu_batch
+        eu_asin_body
       );
 
-    if (na_batch.length > 0)
-      response_na = await getItemListingBatchAsin(
+    if (na_asin_body.length > 0)
+      amazon_response_na = await getItemListingBatchAsin(
         "na",
         access_token_na,
-        na_batch
+        na_asin_body
       );
   } catch (error) {
     // Error fetch from amazon
@@ -219,8 +205,8 @@ ipcMain.handle("get_listing_for_asins", async (_, data) => {
 
   // Success
   return responseSchema(21, `Erfolgreich gefetcht`, {
-    response_eu: response_eu,
-    response_na: response_na,
+    response_eu: amazon_response_eu,
+    response_na: amazon_response_na,
   });
 });
 

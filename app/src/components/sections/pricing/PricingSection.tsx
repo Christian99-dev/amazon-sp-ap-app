@@ -3,7 +3,7 @@ import Spinner from "../../shared/Spinner";
 import PricingTable from "./PricingTable";
 
 const Preise = ({ className }: { className?: string }) => {
-  const { currentResponse, isLoading } = usePricingContext();
+  const { currentProducts, isLoading } = usePricingContext();
 
   return (
     <div className={`${className} gap-5 box relative !p-0`}>
@@ -12,7 +12,7 @@ const Preise = ({ className }: { className?: string }) => {
           <Spinner size="lg" />
         </div>
       ) : (
-        <PricingTable listingOffers={currentResponse} />
+        <PricingTable currentProducts={currentProducts} />
       )}
     </div>
   );
