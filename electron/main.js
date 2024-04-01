@@ -11,12 +11,10 @@ const getItemListingBatchAsin = require("./amazon/get-item-listing-batch-asin");
 /**
  * CONFIG
  */
-const dev = true;
+const dev = false;
 const HTML_DEVELOPMENT_PATH = "http://localhost:3000/";
 const HTML_PRODUCTION_PATH = path.join(__dirname, "../app/build/index.html");
 const PRELOAD_PATH = path.join(__dirname, "preload.js");
-const HEIGHT = 700;
-const WIDTH = 1200;
 const TITLE = "Dietz Amazon SP-API";
 
 /**
@@ -25,13 +23,15 @@ const TITLE = "Dietz Amazon SP-API";
 const createMainWindow = () => {
   const window = new BrowserWindow({
     title: TITLE,
-    width: WIDTH,
-    height: HEIGHT,
+    show: false,
     webPreferences: {
       preload: PRELOAD_PATH,
       sandbox: false,
     },
   });
+
+  window.maximize();
+  window.show();
 
   const startUrl = dev ? HTML_DEVELOPMENT_PATH : HTML_PRODUCTION_PATH;
 

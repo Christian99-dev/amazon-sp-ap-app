@@ -35,6 +35,7 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         position="bottom-left"
         theme="colored"
         closeOnClick
+        autoClose={1500}
       />
     </ToastContext.Provider>
   );

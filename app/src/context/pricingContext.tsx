@@ -128,8 +128,6 @@ export const PricingProvider = ({ children }: any) => {
       return 0;
     });
 
-    console.log(itemsOnMarketplaceAmazonResponse);
-
     return products;
   };
 
