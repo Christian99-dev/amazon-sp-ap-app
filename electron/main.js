@@ -155,7 +155,7 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
   };
 
   // get payload
-  const { coutrys, asin, access_token_eu, access_token_na } = data;
+  const { coutrys, asin, condition, access_token_eu, access_token_na } = data;
 
   // Create batches
   let eu_asin_body = [];
@@ -167,7 +167,7 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
       uri: `/products/pricing/v0/items/${asin}/offers`,
       method: "GET",
       MarketplaceId: marketplaceId,
-      ItemCondition: "New",
+      ItemCondition: condition,
     };
 
     switch (region) {

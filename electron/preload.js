@@ -4,10 +4,17 @@ contextBridge.exposeInMainWorld("api", {
   manageToken: (region, action) =>
     ipcRenderer.invoke("manage_token", { region: region, action: action }),
 
-  getListingForAsin: (coutrys, asin, access_token_eu, access_token_na) =>
+  getListingForAsin: (
+    coutrys,
+    asin,
+    condition,
+    access_token_eu,
+    access_token_na
+  ) =>
     ipcRenderer.invoke("get_listing_for_asin", {
       coutrys: coutrys,
       asin: asin,
+      condition: condition,
       access_token_eu: access_token_eu,
       access_token_na: access_token_na,
     }),

@@ -1,12 +1,12 @@
-import { useAsinsContext } from "../../../context/asinsContext";
+import { useOptionsContext } from "../../../context/optionsContext";
 import { usePricingContext } from "../../../context/pricingContext";
 import { useSideMenu } from "../../../context/sidemenuContext";
-import { isAsin } from "../../../lib/regex";
 import Button from "../../shared/Button";
 import Input from "../../shared/Input";
 
 const AsinsBox = ({ className }: { className?: string }) => {
-  const { asin, setAsin, isValidAsin } = useAsinsContext();
+  const { asin, setAsin, isValidAsin, flipCondition, condition } =
+    useOptionsContext();
   const { startSearching, isLoading } = usePricingContext();
   const { toggleMenu } = useSideMenu();
 
@@ -24,6 +24,8 @@ const AsinsBox = ({ className }: { className?: string }) => {
         iconName={"search"}
         disableButton={isLoading}
       />
+      <h1 className="flex items-center ml-auto text-sm">Zustand:</h1>
+      <Button className="maring" onClick={flipCondition} text={condition} disabled={isLoading} />
     </div>
   );
 };

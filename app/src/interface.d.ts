@@ -152,6 +152,7 @@ declare global {
       getListingForAsin: (
         countrys: CountryData[],
         asin: string,
+        condition: ItemCondition,
         access_token_eu: string,
         access_token_na: string
       ) => Promise<GetListingForAsinIPCResponse>;

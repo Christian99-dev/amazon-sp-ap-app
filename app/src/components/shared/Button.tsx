@@ -22,7 +22,7 @@ const Button = ({
         disabled
           ? "bg-blue-300 cursor-not-allowed"
           : "bg-blue-600 hover:bg-blue-800"
-      } ${iconName ? "px-1.5 py-1" : "px-2 py-1.5"}`}
+      } ${iconName ? "px-1.5 py-[6.3px]" : "px-2 py-[8.5px]"}`}
     >
       {iconName ? <Icon className="h-5" iconName={iconName} /> : text}
     </button>

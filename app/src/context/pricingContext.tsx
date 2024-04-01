@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { useAsinsContext } from "./asinsContext";
+import { useOptionsContext } from "./optionsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
 import { useToastContext } from "./toastContext";
@@ -49,7 +49,7 @@ export const PricingProvider = ({ children }: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Uses..
-  const { asin, isValidAsin } = useAsinsContext();
+  const { asin, isValidAsin, condition } = useOptionsContext();
   const { selectedCountries, hasCountrysSelected } = useCountryContext();
   const {
     tokenState: { accessTokenEU, accessTokenNA },
@@ -76,10 +76,10 @@ export const PricingProvider = ({ children }: any) => {
 
         // ASIN not found in marketplace
         if (statusCode !== 200) return;
-        if(payload.Offers.length === 0) return;
+        if (payload.Offers.length === 0) return;
 
         offers = payload.Offers;
-        
+
         // Countrycode
         countryCode =
           getCountryCodeFromMarketplaceID(MarketplaceId) || undefined;
@@ -128,7 +128,7 @@ export const PricingProvider = ({ children }: any) => {
       return 0;
     });
 
-    console.log(products)
+    console.log(itemsOnMarketplaceAmazonResponse);
 
     return products;
   };
@@ -167,6 +167,7 @@ export const PricingProvider = ({ children }: any) => {
       ipcResponse = await window.api.getListingForAsin(
         selectedCountries,
         asin,
+        condition,
         accessTokenEU,
         accessTokenNA
       );
