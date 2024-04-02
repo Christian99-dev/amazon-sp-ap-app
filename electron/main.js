@@ -11,7 +11,7 @@ const getItemListingBatchAsin = require("./amazon/get-item-listing-batch-asin");
 /**
  * CONFIG
  */
-const dev = true;
+const dev = false;
 const HTML_DEVELOPMENT_PATH = "http://localhost:3000/";
 const HTML_PRODUCTION_PATH = path.join(__dirname, "../app/build/index.html");
 const PRELOAD_PATH = path.join(__dirname, "preload.js");
