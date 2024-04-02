@@ -3,7 +3,7 @@ import { useOptionsContext } from "./optionsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
 import { useToastContext } from "./toastContext";
-import { getCountryCodeFromMarketplaceID } from "../lib/countrys";
+import { getCountryCodeFromMarketplaceID, getCountryIndex } from "../lib/countrys";
 import { ItemsOnMarketplaceAmazonResponse } from "../interface";
 
 interface PricingContextType {
@@ -89,7 +89,11 @@ export const PricingProvider = ({ children }: any) => {
 
         // Sortiere die Angebote nach dem Preis absteigend
         offers.sort((a, b) => {
-          return (a.ListingPrice.Amount + a.Shipping.Amount) - (b.ListingPrice.Amount - b.Shipping.Amount);
+          return (
+            a.ListingPrice.Amount +
+            a.Shipping.Amount -
+            (b.ListingPrice.Amount - b.Shipping.Amount)
+          );
         });
 
         // parse single products
@@ -121,11 +125,15 @@ export const PricingProvider = ({ children }: any) => {
       }
     );
 
-    // Sortiere die Produkte nach dem Ländercode, "DE" zuerst
+    // Sortiere die Produkte basierend auf der countryCodeIndexMap
     products.sort((a, b) => {
-      if (a.countryCode === "DE") return -1;
-      if (b.countryCode === "DE") return 1;
-      return 0;
+      const indexA = getCountryIndex(a.countryCode);
+      const indexB = getCountryIndex(b.countryCode);
+
+      // Wenn einer der Ländercodes nicht in der Map gefunden wird, sortiere sie nicht um
+      if (indexA === undefined || indexB === undefined) return 0;
+
+      return indexA - indexB;
     });
 
     return products;
