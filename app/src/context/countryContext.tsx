@@ -7,6 +7,8 @@ interface ContriesContextType {
   addCountry: (country: CountryData) => void;
   removeCountry: (country: CountryData) => void;
   hasCountrysSelected: boolean;
+  switchAllOn: () => void;
+  switchAllOff: () => void;
 }
 
 const CountriesContext = createContext<ContriesContextType | undefined>(
@@ -43,6 +45,10 @@ export const CountriesProvider = ({ children }: any) => {
     );
   };
 
+  const switchAllOn = () => setSelectedCountries(getAllActiveCountries());
+
+  const switchAllOff = () => setSelectedCountries([]);
+
   const hasCountrysSelected = selectedCountries.length > 0;
 
   return (
@@ -52,6 +58,8 @@ export const CountriesProvider = ({ children }: any) => {
         addCountry,
         removeCountry,
         hasCountrysSelected,
+        switchAllOn,
+        switchAllOff
       }}
     >
       {children}

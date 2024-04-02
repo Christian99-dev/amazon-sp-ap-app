@@ -6,9 +6,17 @@ import {
 } from "../../../lib/countrys";
 import { useCountryContext } from "../../../context/countryContext";
 import { CountryCheckbox } from "./CountryCheckbox";
+import Button from "../../shared/Button";
 
 const LaenderBox = ({ className }: { className?: string }) => {
-  const { selectedCountries, addCountry, removeCountry } = useCountryContext();
+  const {
+    selectedCountries,
+    addCountry,
+    removeCountry,
+    switchAllOff,
+    switchAllOn,
+    hasCountrysSelected,
+  } = useCountryContext();
 
   return (
     <div className={`${className} box flex flex-col gap-4`}>
@@ -27,6 +35,13 @@ const LaenderBox = ({ className }: { className?: string }) => {
           ))}
         </div>
       ))}
+      <Button
+        text={hasCountrysSelected ? "Switch All OFF" : "Switch All ON"}
+        className="mx-auto w-min"
+        onClick={() => {
+          hasCountrysSelected ? switchAllOff() : switchAllOn();
+        }}
+      />
     </div>
   );
 };
