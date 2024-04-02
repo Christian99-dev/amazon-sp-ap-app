@@ -89,7 +89,7 @@ export const PricingProvider = ({ children }: any) => {
 
         // Sortiere die Angebote nach dem Preis absteigend
         offers.sort((a, b) => {
-          return a.ListingPrice.Amount - b.ListingPrice.Amount;
+          return (a.ListingPrice.Amount + a.Shipping.Amount) - (b.ListingPrice.Amount - b.Shipping.Amount);
         });
 
         // parse single products
