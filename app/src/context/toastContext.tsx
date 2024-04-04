@@ -8,6 +8,7 @@ type ToastType = "info" | "success" | "error";
 // Definiere den Toast-Kontext
 interface ToastContextProps {
   showToast: (message: string, type?: ToastType) => void;
+  clearAll: () => void
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -28,8 +29,12 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const clearAll = () => {
+    toast.dismiss();
+  }
+
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, clearAll }}>
       {children}
       <ToastContainer
         position="bottom-left"

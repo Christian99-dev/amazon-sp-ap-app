@@ -3,8 +3,25 @@ import Preise from "./components/sections/pricing/PricingSection";
 import LaenderBox from "./components/sections/country/CountrySection";
 import Toolbar from "./components/sections/toolbar/Toolbar";
 import Sidemenu from "./components/sections/sidemenu/Sidemenu";
+import { useOptionsContext } from "./context/optionsContext";
+import { useToastContext } from "./context/toastContext";
+import { useEffect } from "react";
+import { usePricingContext } from "./context/pricingContext";
 
 function App() {
+
+  const {clearAll} = useToastContext();
+  const {setAsin} = useOptionsContext();
+  const {startSearching} = usePricingContext();
+
+
+  useEffect(() => {
+    setAsin("1231231231")
+    setTimeout(() => {
+      clearAll();
+      startSearching();
+    }, 200)
+  }, [])
   return (
     <div className="relative z-10 w-full h-screen bg-slate-100">
       <Sidemenu />

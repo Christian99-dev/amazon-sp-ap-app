@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useOptionsContext } from "./optionsContext";
 import { useCountryContext } from "./countryContext";
 import { useTokenContext } from "./tokenContext";
@@ -182,13 +182,16 @@ export const PricingProvider = ({ children }: any) => {
       setIsLoading(false);
       return;
     }
-
+    
+    console.log(ipcResponse.response);
     switch (ipcResponse.code) {
       case 21: {
         const parsedItems = parseAmazonListingItemsToProducts([
           ...(ipcResponse.response.response_na?.responses || []),
           ...(ipcResponse.response.response_eu?.responses || []),
         ]);
+
+
 
         if (parsedItems.length <= 0) {
           showToast("ASIN Zurzeit nicht Gelistet", "error");

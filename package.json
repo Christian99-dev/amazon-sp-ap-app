@@ -8,7 +8,8 @@
     "start": "electron-forge start",
     "dev": "npx electronmon --trace-warnings .",
     "make": "electron-forge make",
-    "package": "electron-forge package"
+    "package": "electron-forge package",
+    "dev_": "electron ."
   },
   "keywords": [
     "amazon",
