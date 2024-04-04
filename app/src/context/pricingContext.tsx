@@ -182,8 +182,7 @@ export const PricingProvider = ({ children }: any) => {
       setIsLoading(false);
       return;
     }
-    
-    console.log(ipcResponse.response);
+
     switch (ipcResponse.code) {
       case 21: {
         const parsedItems = parseAmazonListingItemsToProducts([

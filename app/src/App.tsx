@@ -6,22 +6,18 @@ import Sidemenu from "./components/sections/sidemenu/Sidemenu";
 import { useOptionsContext } from "./context/optionsContext";
 import { useToastContext } from "./context/toastContext";
 import { useEffect } from "react";
-import { usePricingContext } from "./context/pricingContext";
 
 function App() {
-
-  const {clearAll} = useToastContext();
-  const {setAsin} = useOptionsContext();
-  const {startSearching} = usePricingContext();
-
+  const { clearAll } = useToastContext();
+  const { setAsin } = useOptionsContext();
 
   useEffect(() => {
-    setAsin("1231231231")
+    setAsin("1231231231");
+
     setTimeout(() => {
       clearAll();
-      startSearching();
-    }, 200)
-  }, [])
+    }, 200);
+  }, []);
   return (
     <div className="relative z-10 w-full h-screen bg-slate-100">
       <Sidemenu />
