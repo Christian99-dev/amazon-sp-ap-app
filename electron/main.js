@@ -1,12 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 
-// Storage API
-const storageAPI = require("./storage/storageAPI");
-
-// Amazon API
-const getLWAAccessToken = require("./amazon/get-lwa-access-token");
-const getItemListingBatchAsin = require("./amazon/get-item-listing-batch-asin");
+/**
+ * Services
+ */
+const storageAPI = require("./service/storage/storageAPI");
+const getLWAAccessToken = require("./service/amazon/get-lwa-access-token");
+const getItemListingBatchAsin = require("./service/amazon/get-item-listing-batch-asin");
 
 /**
  * CONFIG
