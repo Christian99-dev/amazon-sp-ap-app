@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
+const isAsin = require("./lib/isAsin")
 
 /**
  * Services
@@ -168,7 +169,9 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
     return responseSchema(41, `Bitte ein Land Auswählen`, null);
   }
 
-  //.. asin
+  if(!isAsin(asin)){
+    return responseSchema(43, `Bitte valide ASIN angeben`, null);
+  }
 
   if(access_token_eu == "" || access_token_na == ""){
     return responseSchema(44, `NA/EU Access Token fehlt`, null);

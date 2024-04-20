@@ -32,7 +32,7 @@ export const PricingProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { asin, isValidAsin, condition } = useOptionsContext();
+  const { asin, condition } = useOptionsContext();
   const { selectedCountries } = useCountryContext();
   const { showToast } = useToastContext();
 
@@ -56,14 +56,6 @@ export const PricingProvider = ({
     setCurrentProducts([]);
     setIsLoading(true);
     let ipcResponse: GetListingForAsinIPCResponse;
-
-    /**
-     * Guards
-     */
-    if (!isValidAsin) {
-      showToast("Bitte valide ASIN angeben", "error");
-      return;
-    }
 
     /**
      * Start fetch to amazon
