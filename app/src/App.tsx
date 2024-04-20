@@ -13,8 +13,6 @@ function App() {
   /**
    * Context
    */
-  const { clearAll } = useToastContext();
-  const { setAsin } = useOptionsContext();
   const { manageTokenState } = useTokenContext();
   const { updateCredentialLabelPullFromStorage } = useCredentialsContext();
 
@@ -35,12 +33,6 @@ function App() {
     // Pulling Access Token
     manageTokenState("eu", "get");
     manageTokenState("na", "get");
-
-    // Testing
-    setAsin("1231231231");
-    setTimeout(() => {
-      clearAll();
-    }, 200);
   }, []);
 
   return (
