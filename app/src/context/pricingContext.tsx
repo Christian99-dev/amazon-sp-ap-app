@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useOptionsContext } from "./optionsContext";
 import { useCountryContext } from "./countryContext";
-import { useTokenContext } from "./tokenContext";
 import { useToastContext } from "./toastContext";
 import { parseAmazonListingItemsToProducts } from "../lib/parseAmazonItems";
 
@@ -34,10 +33,7 @@ export const PricingProvider = ({
   children: React.ReactNode;
 }) => {
   const { asin, isValidAsin, condition } = useOptionsContext();
-  const { selectedCountries, hasCountrysSelected } = useCountryContext();
-  const {
-    tokenState: { accessTokenEU, accessTokenNA },
-  } = useTokenContext();
+  const { selectedCountries } = useCountryContext();
   const { showToast } = useToastContext();
 
   /**
@@ -69,11 +65,6 @@ export const PricingProvider = ({
       return;
     }
 
-    if (accessTokenEU === "" || accessTokenNA === "") {
-      showToast("NA/EU Access Token fehlt", "error");
-      return;
-    }
-
     /**
      * Start fetch to amazon
      */
@@ -81,9 +72,7 @@ export const PricingProvider = ({
       ipcResponse = await window.api.getListingForAsin(
         selectedCountries,
         asin,
-        condition,
-        accessTokenEU,
-        accessTokenNA
+        condition
       );
     } catch (error) {
       showToast("Unbekannter Fehler", "error");

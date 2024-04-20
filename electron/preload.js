@@ -7,16 +7,12 @@ contextBridge.exposeInMainWorld("api", {
   getListingForAsin: (
     coutrys,
     asin,
-    condition,
-    access_token_eu,
-    access_token_na
+    condition
   ) =>
     ipcRenderer.invoke("get_listing_for_asin", {
       coutrys: coutrys,
       asin: asin,
-      condition: condition,
-      access_token_eu: access_token_eu,
-      access_token_na: access_token_na,
+      condition: condition
     }),
 
   changeCredentials: (id, value) =>

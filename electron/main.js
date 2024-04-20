@@ -155,14 +155,23 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
   };
 
   // get payload
-  const { coutrys, asin, condition, access_token_eu, access_token_na } = data;
+  const { coutrys, asin, condition } = data;
 
+  // get access token
+  const access_token_eu = storageAPI.readAccessToken("eu")
+  const access_token_na = storageAPI.readAccessToken("na")
 
   /**
    * Guards
    */
   if(coutrys.length <= 0) {
     return responseSchema(41, `Bitte ein Land Auswählen`, null);
+  }
+
+  //.. asin
+
+  if(access_token_eu == "" || access_token_na == ""){
+    return responseSchema(44, `NA/EU Access Token fehlt`, null);
   }
 
   // Create batches
