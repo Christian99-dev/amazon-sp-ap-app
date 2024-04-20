@@ -64,11 +64,6 @@ export const PricingProvider = ({
     /**
      * Guards
      */
-    if (!hasCountrysSelected) {
-      showToast("Bitte ein Land Auswählen", "error");
-      return;
-    }
-
     if (!isValidAsin) {
       showToast("Bitte valide ASIN angeben", "error");
       return;
@@ -112,7 +107,10 @@ export const PricingProvider = ({
         break;
       }
 
-      case 42: {
+      case 41: 
+      case 42: 
+      case 43: 
+      case 44: {
         showToast(ipcResponse.message, "error");
         break;
       }

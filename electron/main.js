@@ -161,6 +161,9 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
   /**
    * Guards
    */
+  if(coutrys.length <= 0) {
+    return responseSchema(41, `Bitte ein Land Auswählen`, null);
+  }
 
   // Create batches
   let eu_asin_body = [];
