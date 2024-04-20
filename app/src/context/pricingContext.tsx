@@ -52,9 +52,14 @@ export const PricingProvider = ({
    * Actions
    */
   const startSearching = async () => {
-    if (!window.api) return;
+    if (!window.api) {
+      showToast("Kein IPC gefunden", "error");
+      return;
+    }
 
     setCurrentProducts([]);
+    setIsLoading(true);
+    let ipcResponse: GetListingForAsinIPCResponse;
 
     /**
      * Guards
@@ -77,9 +82,6 @@ export const PricingProvider = ({
     /**
      * Start fetch to amazon
      */
-    setIsLoading(true);
-
-    let ipcResponse;
     try {
       ipcResponse = await window.api.getListingForAsin(
         selectedCountries,

@@ -157,6 +157,11 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
   // get payload
   const { coutrys, asin, condition, access_token_eu, access_token_na } = data;
 
+
+  /**
+   * Guards
+   */
+
   // Create batches
   let eu_asin_body = [];
   let na_asin_body = [];
@@ -221,6 +226,7 @@ ipcMain.handle("change_credentials", async (_, data) => {
 
   // get payload
   const { id, value } = data;
+  
   /**
    * Guards
    */
