@@ -1,26 +1,21 @@
 import { createContext, useContext, useState } from "react";
 import { isAsin } from "../lib/regex";
 
-interface OptionsContext {
-  asin: string;
-  setAsin: React.Dispatch<React.SetStateAction<string>>;
-  isValidAsin: boolean;
-  condition: string;
-  setCondition: React.Dispatch<React.SetStateAction<ItemCondition>>;
-  flipCondition: () => void;
-}
+/**
+ * Context
+ */
+const OptionsContext = createContext<
+  | {
+      asin: string;
+      setAsin: React.Dispatch<React.SetStateAction<string>>;
+      isValidAsin: boolean;
+      condition: ItemCondition;
+      setCondition: React.Dispatch<React.SetStateAction<ItemCondition>>;
+      flipCondition: () => void;
+    }
+  | undefined
+>(undefined);
 
-type ItemCondition =
-  | "New"
-  | "Used"
-  | "Collectible"
-  | "Refurbished"
-  | "Club";
-
-// Erstellen Sie den Kontext
-const OptionsContext = createContext<OptionsContext | undefined>(undefined);
-
-// Hook, um auf den Kontext zuzugreifen
 export const useOptionsContext = () => {
   const context = useContext(OptionsContext);
   if (!context) {
@@ -31,19 +26,27 @@ export const useOptionsContext = () => {
   return context;
 };
 
-// Provider-Komponente, um den Kontext bereitzustellen
-export const AsinsProvider = ({ children }: any) => {
+/**
+ * Provider
+ */
+export const AsinsProvider = ({ children }: { children: React.ReactNode }) => {
+  /**
+   * State
+   */
   const [asin, setAsin] = useState("");
   const isValidAsin = isAsin(asin);
   const [condition, setCondition] = useState<ItemCondition>("New");
-  
+
+  /**
+   * Actions
+   */
   const flipCondition = () => {
-    if(condition === "New") {
+    if (condition === "New") {
       setCondition("Used");
     } else {
       setCondition("New");
     }
-  }
+  };
 
   return (
     <OptionsContext.Provider
@@ -53,7 +56,7 @@ export const AsinsProvider = ({ children }: any) => {
         isValidAsin,
         condition,
         setCondition,
-        flipCondition
+        flipCondition,
       }}
     >
       {children}

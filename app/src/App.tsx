@@ -6,18 +6,43 @@ import Sidemenu from "./components/sections/sidemenu/Sidemenu";
 import { useOptionsContext } from "./context/optionsContext";
 import { useToastContext } from "./context/toastContext";
 import { useEffect } from "react";
+import { useCredentialsContext } from "./context/credentlalsContext";
+import { useTokenContext } from "./context/tokenContext";
 
 function App() {
+  /**
+   * Context
+   */
   const { clearAll } = useToastContext();
   const { setAsin } = useOptionsContext();
+  const { manageTokenState } = useTokenContext();
+  const { updateCredentialLabelPullFromStorage } = useCredentialsContext();
 
+  /**
+   * On App Start
+   */
   useEffect(() => {
-    setAsin("1231231231");
+    // Pulling Credentials
+    const credsToCheck: PossibleCredentialIDs[] = [
+      "client_id",
+      "client_secret",
+      "refresh_token_eu",
+      "refresh_token_na",
+      "seller_id",
+    ];
+    credsToCheck.forEach((id) => updateCredentialLabelPullFromStorage(id));
 
+    // Pulling Access Token
+    manageTokenState("eu", "get");
+    manageTokenState("na", "get");
+
+    // Testing
+    setAsin("1231231231");
     setTimeout(() => {
       clearAll();
     }, 200);
   }, []);
+
   return (
     <div className="relative z-10 w-full h-screen bg-slate-100">
       <Sidemenu />

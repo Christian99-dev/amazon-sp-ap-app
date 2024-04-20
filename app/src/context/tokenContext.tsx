@@ -1,14 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useToastContext } from "./toastContext";
-import { ManageTokenIPCResponse } from "../interface";
 
-type TokenState = {
-  accessTokenEU: string;
-  accessTokenNA: string;
-  loadingEuToken: boolean;
-  loadingNaToken: boolean;
-};
-
+/**
+ * Context
+ */
 const TokenContext = createContext<
   | {
       tokenState: TokenState;
@@ -28,6 +23,9 @@ export const useTokenContext = () => {
   return context;
 };
 
+/**
+ * Provider
+ */
 export const TokenProvider = ({ children }: any) => {
   const { showToast } = useToastContext();
 
@@ -40,14 +38,6 @@ export const TokenProvider = ({ children }: any) => {
     loadingEuToken: true,
     loadingNaToken: true,
   });
-
-  /**
-   * On App Start
-   * */
-  useEffect(() => {
-    manageTokenState("eu", "get");
-    manageTokenState("na", "get");
-  }, []);
 
   /**
    * Actions
@@ -99,11 +89,6 @@ export const TokenProvider = ({ children }: any) => {
     updateLoadingState(region, false);
     return;
   };
-
-  /**
-   * Helper
-   * */
-
   const updateLoadingState = (region: "eu" | "na", isLoading: boolean) => {
     setTokenState((prevState) => ({
       ...prevState,
@@ -111,7 +96,6 @@ export const TokenProvider = ({ children }: any) => {
       loadingNaToken: region === "na" ? isLoading : prevState.loadingNaToken,
     }));
   };
-
   const updateTokenState = (region: "eu" | "na", accessToken: string) => {
     setTokenState((prevState) => ({
       ...prevState,

@@ -1,21 +1,21 @@
 import { createContext, useContext, useState } from "react";
 import { CountryData, getAllActiveCountries } from "../lib/countrys";
 
-// Definieren Sie den Kontext
-interface ContriesContextType {
-  selectedCountries: CountryData[];
-  addCountry: (country: CountryData) => void;
-  removeCountry: (country: CountryData) => void;
-  hasCountrysSelected: boolean;
-  switchAllOn: () => void;
-  switchAllOff: () => void;
-}
+/**
+ * Context
+ */
+const CountriesContext = createContext<
+  | {
+      selectedCountries: CountryData[];
+      addCountry: (country: CountryData) => void;
+      removeCountry: (country: CountryData) => void;
+      hasCountrysSelected: boolean;
+      switchAllOn: () => void;
+      switchAllOff: () => void;
+    }
+  | undefined
+>(undefined);
 
-const CountriesContext = createContext<ContriesContextType | undefined>(
-  undefined
-);
-
-// Custom Hook, um auf den Kontext zuzugreifen
 export const useCountryContext = () => {
   const context = useContext(CountriesContext);
   if (!context) {
@@ -26,29 +26,37 @@ export const useCountryContext = () => {
   return context;
 };
 
-// Provider-Komponente, um den Kontext bereitzustellen
-export const CountriesProvider = ({ children }: any) => {
+/**
+ * Provider
+ */
+export const CountriesProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  /**
+   * State
+   */
   const [selectedCountries, setSelectedCountries] = useState<CountryData[]>(
     getAllActiveCountries()
   );
 
+  /**
+   * Actions
+   */
   const addCountry = (country: CountryData) => {
     setSelectedCountries((prevSelectedCountries) => [
       ...prevSelectedCountries,
       country,
     ]);
   };
-
   const removeCountry = (country: CountryData) => {
     setSelectedCountries((prevSelectedCountries) =>
       prevSelectedCountries.filter((c) => c !== country)
     );
   };
-
   const switchAllOn = () => setSelectedCountries(getAllActiveCountries());
-
   const switchAllOff = () => setSelectedCountries([]);
-
   const hasCountrysSelected = selectedCountries.length > 0;
 
   return (
@@ -59,7 +67,7 @@ export const CountriesProvider = ({ children }: any) => {
         removeCountry,
         hasCountrysSelected,
         switchAllOn,
-        switchAllOff
+        switchAllOff,
       }}
     >
       {children}

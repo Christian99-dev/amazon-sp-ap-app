@@ -1,8 +1,8 @@
 import { useCredentialsContext } from "../../../context/credentlalsContext";
-import { ProductsInMarketplace } from "../../../context/pricingContext";
 import { useHorizontalScroll } from "../../../hooks/useHorizontalScroll";
 import getFlag from "../../../lib/getFlag";
 import getRatingColor from "../../../lib/getRatingColor";
+
 const PricingTable = ({
   currentProducts,
 }: {

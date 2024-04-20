@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext } from "react";
 
-// Erstellen des Kontexts für das Side Menu
+/**
+ * Context
+ */
 const SideMenuContext = createContext<
   | {
       isOpen: boolean;
@@ -17,13 +19,22 @@ export const useSideMenu = () => {
   return context;
 };
 
+/**
+ * Provider
+ */
 export const SideMenuProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  /**
+   * State
+   */
   const [isOpen, setIsOpen] = useState(false);
 
+  /**
+   * Actions
+   */
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };

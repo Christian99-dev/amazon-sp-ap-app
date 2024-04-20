@@ -1,0 +1,1 @@
+type ToastType = "info" | "success" | "error";

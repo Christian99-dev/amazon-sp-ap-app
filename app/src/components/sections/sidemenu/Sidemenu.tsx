@@ -1,7 +1,4 @@
-import {
-  PossibleCredentialIDs,
-  useCredentialsContext,
-} from "../../../context/credentlalsContext";
+import { useCredentialsContext } from "../../../context/credentlalsContext";
 import { useSideMenu } from "../../../context/sidemenuContext";
 import Button from "../../shared/Button";
 import SidemenuInput from "./SidemenuInput";
@@ -13,10 +10,13 @@ const Sidemenu = () => {
     credentialsLabel,
     changeCredentialInputState,
     isLoading,
-    setCredentialStorage,
+    setCredentialStorageAndUpdateLabel,
   } = useCredentialsContext();
 
-  const credentialInputsOnSidebar: { label: string; id: PossibleCredentialIDs }[] = [
+  const credentialInputsOnSidebar: {
+    label: string;
+    id: PossibleCredentialIDs;
+  }[] = [
     { label: "Client ID", id: "client_id" },
     { label: "Client Secret", id: "client_secret" },
     { label: "Seller ID", id: "seller_id" },
@@ -57,7 +57,7 @@ const Sidemenu = () => {
                 changeCredentialInputState(id, event.target.value);
               }}
               onButton={() => {
-                setCredentialStorage(id);
+                setCredentialStorageAndUpdateLabel(id);
               }}
               disableButton={isLoading}
               iconName="refresh"

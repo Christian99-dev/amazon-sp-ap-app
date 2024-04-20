@@ -2,19 +2,32 @@ import React, { createContext, useContext } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Definiere den Typ für die Nachrichtentypen
-type ToastType = "info" | "success" | "error";
-
-// Definiere den Toast-Kontext
-interface ToastContextProps {
+/**
+ * Context
+ */
+const ToastContext = createContext<{
   showToast: (message: string, type?: ToastType) => void;
   clearAll: () => void
-}
+} | undefined>(undefined);
 
-const ToastContext = createContext<ToastContextProps | undefined>(undefined);
+export const useToastContext = () => {
+  const context = useContext(ToastContext);
+  if (!context) {
+    throw new Error(
+      "useToast muss innerhalb eines ToastProviders verwendet werden"
+    );
+  }
+  return context;
+};
 
-// Toast-Komponente
-const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+/**
+ * Provider
+ */
+export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+  
+  /**
+   * Actions
+   */
   const showToast = (message: string, type: ToastType = "info") => {
     switch (type) {
       case "info":
@@ -28,7 +41,6 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         break;
     }
   };
-
   const clearAll = () => {
     toast.dismiss();
   }
@@ -46,15 +58,3 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Hook, um den Toast im Komponentenbaum zu verwenden
-const useToastContext = (): ToastContextProps => {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error(
-      "useToast muss innerhalb eines ToastProviders verwendet werden"
-    );
-  }
-  return context;
-};
-
-export { ToastProvider, useToastContext };

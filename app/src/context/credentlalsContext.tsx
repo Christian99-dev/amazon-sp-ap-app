@@ -1,51 +1,23 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useToastContext } from "./toastContext";
-import {
-  GetCredentialsIPCResponse,
-  type ChangeCredentialsIPCResponse,
-} from "../interface";
 
-type CredentialsContextType = {
-  credentialsInput: {
-    client_id: string;
-    client_secret: string;
-    refresh_token_eu: string;
-    refresh_token_na: string;
-    seller_id: string;
-  };
-  credentialsLabel: {
-    client_id: string;
-    client_secret: string;
-    refresh_token_eu: string;
-    refresh_token_na: string;
-    seller_id: string;
-  };
-  isLoading: boolean;
-  changeCredentialInputState: (
-    id: PossibleCredentialIDs,
-    value: string
-  ) => void;
-  setCredentialStorage: (id: PossibleCredentialIDs) => void;
-};
-
-export type PossibleCredentialIDs =
-  | "client_id"
-  | "client_secret"
-  | "refresh_token_eu"
-  | "refresh_token_na"
-  | "seller_id";
-
-const initialCredentials = {
-  client_id: "",
-  client_secret: "",
-  refresh_token_eu: "",
-  refresh_token_na: "",
-  seller_id: ""
-};
-
-const CredentialsContext = createContext<CredentialsContextType | undefined>(
-  undefined
-);
+/**
+ * Context
+ */
+const CredentialsContext = createContext<
+  | {
+      credentialsInput: Credentials;
+      credentialsLabel: Credentials;
+      isLoading: boolean;
+      changeCredentialInputState: (
+        id: PossibleCredentialIDs,
+        value: string
+      ) => void;
+      setCredentialStorageAndUpdateLabel: (id: PossibleCredentialIDs) => void;
+      updateCredentialLabelPullFromStorage: (id: PossibleCredentialIDs) => void;
+    }
+  | undefined
+>(undefined);
 
 export const useCredentialsContext = () => {
   const context = useContext(CredentialsContext);
@@ -57,17 +29,37 @@ export const useCredentialsContext = () => {
   return context;
 };
 
+/**
+ * Provider
+ */
 export const CredentialsProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  /**
+   * State
+   */
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToastContext();
-  const [credentialsInput, setCredentialsInput] = useState(initialCredentials);
-  const [credentialsLabel, setCredentialsLabel] = useState(initialCredentials);
+  const [credentialsInput, setCredentialsInput] = useState<Credentials>({
+    client_id: "",
+    client_secret: "",
+    refresh_token_eu: "",
+    refresh_token_na: "",
+    seller_id: ""
+  });
+  const [credentialsLabel, setCredentialsLabel] = useState<Credentials>({
+    client_id: "",
+    client_secret: "",
+    refresh_token_eu: "",
+    refresh_token_na: "",
+    seller_id: "",
+  });
 
-  // State Change
+  /**
+   * Actions
+   */
   const changeCredentialInputState = (
     id: PossibleCredentialIDs,
     value: string
@@ -77,7 +69,6 @@ export const CredentialsProvider = ({
       [id]: value,
     }));
   };
-
   const changeCredentialLabelState = (
     id: PossibleCredentialIDs,
     value: string
@@ -87,8 +78,6 @@ export const CredentialsProvider = ({
       [id]: value,
     }));
   };
-
-  // Storage Set / Get
   const setCredentialStorageAndUpdateLabel = async (
     id: PossibleCredentialIDs
   ) => {
@@ -131,7 +120,6 @@ export const CredentialsProvider = ({
     // loading to false
     setIsLoading(false);
   };
-
   const updateCredentialLabelPullFromStorage = async (
     id: PossibleCredentialIDs
   ) => {
@@ -164,18 +152,6 @@ export const CredentialsProvider = ({
     }
   };
 
-  useEffect(() => {
-    const credIds: PossibleCredentialIDs[] = [
-      "client_id",
-      "client_secret",
-      "refresh_token_eu",
-      "refresh_token_na",
-      "seller_id"
-    ];
-
-    credIds.forEach((id) => updateCredentialLabelPullFromStorage(id));
-  }, []);
-
   return (
     <CredentialsContext.Provider
       value={{
@@ -183,7 +159,8 @@ export const CredentialsProvider = ({
         credentialsLabel,
         isLoading,
         changeCredentialInputState,
-        setCredentialStorage: setCredentialStorageAndUpdateLabel,
+        setCredentialStorageAndUpdateLabel,
+        updateCredentialLabelPullFromStorage
       }}
     >
       {children}
