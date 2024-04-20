@@ -3,8 +3,6 @@ import Preise from "./components/sections/pricing/PricingSection";
 import LaenderBox from "./components/sections/country/CountrySection";
 import Toolbar from "./components/sections/toolbar/Toolbar";
 import Sidemenu from "./components/sections/sidemenu/Sidemenu";
-import { useOptionsContext } from "./context/optionsContext";
-import { useToastContext } from "./context/toastContext";
 import { useEffect } from "react";
 import { useCredentialsContext } from "./context/credentlalsContext";
 import { useTokenContext } from "./context/tokenContext";
