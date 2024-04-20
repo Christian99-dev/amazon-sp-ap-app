@@ -1,5 +1,5 @@
 module.exports = async (client_id, client_secret, refresh_token) => {
-  let testing = true;
+  let testing = false;
   let response;
 
   if (testing) {

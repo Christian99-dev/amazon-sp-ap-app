@@ -1,5 +1,5 @@
 module.exports = async (region, access_token, body) => {
-  let testing = true;
+  let testing = false;
   let response;
 
   let endpoint =
