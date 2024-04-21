@@ -82,11 +82,7 @@ const PricingTable = ({
                   {currencyCode}
                 </div>
                 <div className="w-1/6 text-left text-[11px]">{shipsFrom}</div>
-                <div
-                  className={`w-1/6 text-center text-[12px] font-bold ${getRatingColor(
-                    rating
-                  )}`}
-                >
+                <div className={`w-1/6 text-center text-[12px] font-bold `}>
                   {rating}
                 </div>
               </div>
