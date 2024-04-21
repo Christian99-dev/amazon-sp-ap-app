@@ -1,7 +1,8 @@
 import { useCredentialsContext } from "../../../context/credentlalsContext";
 import { useHorizontalScroll } from "../../../hooks/useHorizontalScroll";
 import getFlag from "../../../lib/getFlag";
-import getRatingColor from "../../../lib/getRatingColor";
+import TableHead from "./TableHead";
+import TableRow from "./TableRow";
 
 const PricingTable = ({
   currentProducts,
@@ -28,26 +29,7 @@ const PricingTable = ({
           ></img>
 
           {/** Tabellen-Kopf */}
-          <div key={index} className="py-1 text-[12px] flex">
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              LAND
-            </div>
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              LIST
-            </div>
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              SHIP
-            </div>
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              CURR
-            </div>
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              FROM
-            </div>
-            <div className="w-1/6 text-left text-[12px] font-bold text-violet-800">
-              RATE
-            </div>
-          </div>
+          <TableHead items={["LAND", "LIST", "SHIP", "CURR", "FROM", "RATE"]} />
 
           {/** Preise */}
           {item.products.map(
@@ -63,29 +45,21 @@ const PricingTable = ({
               },
               index
             ) => (
-              <div
+              <TableRow
                 key={index}
-                className={`py-1 text-[12px] flex ${
-                  (sellerID === credentialsLabel.seller_id_eu ||
-                    sellerID === credentialsLabel.seller_id_na) &&
-                  "bg-green-200"
-                }`}
-              >
-                <div className="w-1/6 text-left text-[11px]">{landedPrice}</div>
-                <div className="w-1/6 text-left text-[11px]">
-                  {listingPrice}
-                </div>
-                <div className="w-1/6 text-left text-[11px]">
-                  {shippingPrice}
-                </div>
-                <div className="w-1/6 text-left text-[11px]">
-                  {currencyCode}
-                </div>
-                <div className="w-1/6 text-left text-[11px]">{shipsFrom}</div>
-                <div className={`w-1/6 text-center text-[12px] font-bold `}>
-                  {rating}
-                </div>
-              </div>
+                items={[
+                  landedPrice,
+                  listingPrice,
+                  shippingPrice,
+                  currencyCode,
+                  shipsFrom,
+                  rating,
+                ]}
+                highlight={
+                  sellerID === credentialsLabel.seller_id_eu ||
+                  sellerID === credentialsLabel.seller_id_na
+                }
+              />
             )
           )}
         </div>
