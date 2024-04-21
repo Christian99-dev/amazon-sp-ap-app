@@ -47,14 +47,16 @@ export const CredentialsProvider = ({
     client_secret: "",
     refresh_token_eu: "",
     refresh_token_na: "",
-    seller_id: ""
+    seller_id_eu: "",
+    seller_id_na: "",
   });
   const [credentialsLabel, setCredentialsLabel] = useState<Credentials>({
     client_id: "",
     client_secret: "",
     refresh_token_eu: "",
     refresh_token_na: "",
-    seller_id: "",
+    seller_id_eu: "",
+    seller_id_na: "",
   });
 
   /**

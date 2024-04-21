@@ -19,7 +19,8 @@ const Sidemenu = () => {
   }[] = [
     { label: "Client ID", id: "client_id" },
     { label: "Client Secret", id: "client_secret" },
-    { label: "Seller ID", id: "seller_id" },
+    { label: "Seller ID EU", id: "seller_id_eu" },
+    { label: "Seller ID NA", id: "seller_id_na" },
     { label: "Refresh Token EU", id: "refresh_token_eu" },
     { label: "Refresh Token NA", id: "refresh_token_na" },
   ];

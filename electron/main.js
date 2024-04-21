@@ -256,8 +256,11 @@ ipcMain.handle("change_credentials", async (_, data) => {
     case "client_secret":
       storageAPI.writeClientSecret(value);
       break;
-    case "seller_id":
-      storageAPI.writeSellerID(value);
+    case "seller_id_eu":
+      storageAPI.writeSellerID("eu", value);
+      break;
+    case "seller_id_na":
+      storageAPI.writeSellerID("na", value);
       break;
     case "refresh_token_eu":
       storageAPI.writeRefreshToken("eu", value);
@@ -295,8 +298,11 @@ ipcMain.handle("get_credentials", async (_, data) => {
     case "client_secret":
       value = storageAPI.readClientSecret();
       break;
-    case "seller_id":
-      value = storageAPI.readSellerID();
+    case "seller_id_eu":
+      value = storageAPI.readSellerID("eu");
+      break;
+    case "seller_id_na":
+      value = storageAPI.readSellerID("na");
       break;
     case "refresh_token_eu":
       value = storageAPI.readRefreshToken("eu");

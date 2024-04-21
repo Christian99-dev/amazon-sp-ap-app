@@ -66,7 +66,9 @@ const PricingTable = ({
               <div
                 key={index}
                 className={`py-1 text-[12px] flex ${
-                  sellerID === credentialsLabel.seller_id && "bg-green-200"
+                  (sellerID === credentialsLabel.seller_id_eu ||
+                    sellerID === credentialsLabel.seller_id_na) &&
+                  "bg-green-200"
                 }`}
               >
                 <div className="w-1/6 text-left text-[11px]">{landedPrice}</div>
