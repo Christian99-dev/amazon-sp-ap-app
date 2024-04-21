@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
-const isAsin = require("./lib/isAsin")
+const isAsin = require("./lib/isAsin");
 
 /**
  * Services
@@ -159,21 +159,21 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
   const { coutrys, asin, condition } = data;
 
   // get access token
-  const access_token_eu = storageAPI.readAccessToken("eu")
-  const access_token_na = storageAPI.readAccessToken("na")
+  const access_token_eu = storageAPI.readAccessToken("eu");
+  const access_token_na = storageAPI.readAccessToken("na");
 
   /**
    * Guards
    */
-  if(coutrys.length <= 0) {
+  if (coutrys.length <= 0) {
     return responseSchema(41, `Bitte ein Land Auswählen`, null);
   }
 
-  if(!isAsin(asin)){
+  if (!isAsin(asin)) {
     return responseSchema(43, `Bitte valide ASIN angeben`, null);
   }
 
-  if(access_token_eu == "" || access_token_na == ""){
+  if (access_token_eu == "" || access_token_na == "") {
     return responseSchema(44, `NA/EU Access Token fehlt`, null);
   }
 
@@ -219,6 +219,17 @@ ipcMain.handle("get_listing_for_asin", async (_, data) => {
         na_asin_body
       );
   } catch (error) {
+    // Limit überstiegen
+    if (error.message == 429)
+      return responseSchema(45, `Zu viele anfragen!`, null);
+
+    if (error.message == 403)
+      return responseSchema(
+        46,
+        `Access Token abgelaufen/falsch`,
+        null
+      );
+
     // Error fetch from amazon
     return responseSchema(42, `Amazon API Fehler ${error}`, null);
   }
@@ -241,7 +252,7 @@ ipcMain.handle("change_credentials", async (_, data) => {
 
   // get payload
   const { id, value } = data;
-  
+
   /**
    * Guards
    */

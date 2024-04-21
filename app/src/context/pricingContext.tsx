@@ -88,10 +88,12 @@ export const PricingProvider = ({
         break;
       }
 
-      case 41: 
-      case 42: 
-      case 43: 
-      case 44: {
+      case 41:
+      case 42:
+      case 43:
+      case 44:
+      case 45:
+      case 46: {
         showToast(ipcResponse.message, "error");
         break;
       }
