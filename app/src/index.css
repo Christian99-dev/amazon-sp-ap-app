@@ -37,3 +37,45 @@ h1 {
 .Toastify__toast path {
   @apply text-slate-100;
 }
+
+/* Stil für die Scrollleiste */
+/* Webkit (Safari, Chrome) */
+::-webkit-scrollbar {
+  width: 6px; /* Breite der Scrollleiste */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Farbe des Scrollbalken-Griffs */
+  border-radius: 3px; /* Abgerundete Ecken */
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Hintergrundfarbe der Scrollleiste */
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent; /* Ecken der Scrollleiste verstecken */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+*::-moz-scrollbar {
+  width: 6px;
+}
+
+*::-moz-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 3px;
+}
+
+*::-moz-scrollbar-track {
+  background-color: transparent;
+}
+
+*::-moz-scrollbar-corner {
+  background-color: transparent;
+}

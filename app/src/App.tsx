@@ -6,6 +6,8 @@ import Sidemenu from "./components/sections/sidemenu/Sidemenu";
 import { useEffect } from "react";
 import { useCredentialsContext } from "./context/credentlalsContext";
 import { useTokenContext } from "./context/tokenContext";
+import { useToastContext } from "./context/toastContext";
+import { useOptionsContext } from "./context/optionsContext";
 
 function App() {
   /**
@@ -13,6 +15,8 @@ function App() {
    */
   const { manageTokenState } = useTokenContext();
   const { updateCredentialLabelPullFromStorage } = useCredentialsContext();
+  const { clearAll } = useToastContext();
+  const { setAsin } = useOptionsContext();
 
   /**
    * On App Start
@@ -32,6 +36,12 @@ function App() {
     // Pulling Access Token
     manageTokenState("eu", "get");
     manageTokenState("na", "get");
+
+    // Testing
+    // setAsin("1231231231");
+    // setTimeout(() => {
+    //   clearAll();
+    // }, 200);
   }, []);
 
   return (

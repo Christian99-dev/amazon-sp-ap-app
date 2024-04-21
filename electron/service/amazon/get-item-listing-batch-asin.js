@@ -19,7 +19,7 @@ module.exports = async (region, access_token, body) => {
             return require("./../../json/listing_offers.json")
           },
         });
-      }, 500);
+      }, 100);
     });
   } else {
     try {

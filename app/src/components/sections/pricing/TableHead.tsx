@@ -1,6 +1,6 @@
 const TableHead = ({ items }: { items: string[] }) => {
   return (
-    <div className="flex">
+    <div className="flex pr-[10px]">
       {items.map((item, key) => (
         <div
           key={key}
