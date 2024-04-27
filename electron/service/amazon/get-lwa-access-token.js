@@ -1,6 +1,6 @@
 const OLD_ACCESS_TOKEN = "Atza|IwEBIK96A6BGqQuTTI4T-0TOMLGV2gkqoDiOs_GFmZc8pOkrTwmzGzMVNbTVItszWYhfg8Qm-oNv9nGDD6d-opG52_P9D_gxNT-w08mesMsenHkfPa6Kpl7lGKzATKvxqviqbTxgi1B6LNzES0rKxiFcv5szMT9mh70uqDPJsJQkOiHeo32UCSCTsM7HmguSWEcaqBgvAXUPis8OoODcu2d-4qssBuV959ksfO34n6mr_JubX8U5DqUNeZiDz4eX8nQX04G-IsTCGrMGEm3BSUhwKBJ4LMNaeMIKJ03adBgMYEbhSVozQvzEhXx29ccH3mjfQYTSYOBXWPemDQ5yO-CmHlydtTnREqBVqXcXgmevJ4ZZkQ"
-const TESTING = true;
-const USE_OLD_ACCESS_TOKEN = true;
+const TESTING = false;
+const USE_OLD_ACCESS_TOKEN = false;
 
 module.exports = async (client_id, client_secret, refresh_token) => {
   let response;

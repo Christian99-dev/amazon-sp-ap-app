@@ -10,7 +10,7 @@ const TokenContext = createContext<
       manageTokenState: (
         region: "eu" | "na",
         action: "refresh" | "get"
-      ) => void;
+      ) => Promise<boolean>;
     }
   | undefined
 >(undefined);
@@ -47,10 +47,12 @@ export const TokenProvider = ({ children }: any) => {
     action: "get" | "refresh"
   ) => {
 
+    let isSuccessfull = false;
+
     // Browser
     if(!window.api) {
       showToast("Kein IPC gefunden", "error");
-      return;
+      return isSuccessfull;
     }
     
     let manageTokenIpcResponse: ManageTokenIPCResponse;
@@ -64,7 +66,7 @@ export const TokenProvider = ({ children }: any) => {
     } catch(error) {
       showToast("Unbekannter Fehler", "error");
       updateLoadingState(region, false);
-      return;
+      return isSuccessfull;
     }
 
     // Auswerten des ereignis
@@ -72,23 +74,27 @@ export const TokenProvider = ({ children }: any) => {
       case 41:
       case 42: {
         showToast(manageTokenIpcResponse.message, "error");
+        isSuccessfull = false;
         break;
       }
       case 21: {
         updateTokenState(region, manageTokenIpcResponse.access_token);
         showToast(manageTokenIpcResponse.message, "success");
+        isSuccessfull = true;
         break;
       }
       case 22: {
         updateTokenState(region, manageTokenIpcResponse.access_token);
         showToast(manageTokenIpcResponse.message, "info");
+        isSuccessfull = true;
         break;
       }
     }
 
     updateLoadingState(region, false);
-    return;
+    return isSuccessfull;
   };
+
   const updateLoadingState = (region: "eu" | "na", isLoading: boolean) => {
     setTokenState((prevState) => ({
       ...prevState,

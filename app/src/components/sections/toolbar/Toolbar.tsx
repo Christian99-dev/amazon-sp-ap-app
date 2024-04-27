@@ -20,7 +20,7 @@ const AsinsBox = ({ className }: { className?: string }) => {
         value={asin}
         placeholder={`ASIN`}
         onChange={(event) => setAsin(event.target.value)}
-        onButton={() => startSearching()}
+        onButton={() => startSearching(false)}
         iconName={"search"}
         disableButton={isLoading}
       />
