@@ -1,5 +1,6 @@
+const TESTING = false;
+
 module.exports = async (region, access_token, body) => {
-  let testing = false;
   let response;
 
   let endpoint =
@@ -7,7 +8,7 @@ module.exports = async (region, access_token, body) => {
       ? "https://sellingpartnerapi-na.amazon.com"
       : "https://sellingpartnerapi-eu.amazon.com";
 
-  if (testing) {
+  if (TESTING) {
     // Führe die gleiche Logik durch, aber gib stattdessen den Test-Token zurück
     response = await new Promise((resolve) => {
       setTimeout(() => {
