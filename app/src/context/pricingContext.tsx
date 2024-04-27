@@ -63,7 +63,7 @@ export const PricingProvider = ({
     try {
       ipcResponse = await window.api.getListingForAsin(
         selectedCountries,
-        asin,
+        asin.trim(),
         condition
       );
     } catch (error) {
